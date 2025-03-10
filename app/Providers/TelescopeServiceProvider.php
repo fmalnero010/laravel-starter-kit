@@ -65,7 +65,7 @@ class TelescopeServiceProvider extends TelescopeApplicationServiceProvider
         });
     }
 
-    protected function authorization(): bool
+    protected function authorization(): void
     {
         $this->gate();
 
