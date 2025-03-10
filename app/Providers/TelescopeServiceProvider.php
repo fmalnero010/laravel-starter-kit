@@ -58,8 +58,7 @@ class TelescopeServiceProvider extends TelescopeApplicationServiceProvider
     protected function gate(): void
     {
         Gate::define('viewTelescope', function ($user) {
-            $accessKey = request()->query('telescope_key');
-            return $accessKey === env('TELESCOPE_ACCESS_KEY');
+            return true;
         });
     }
 }
