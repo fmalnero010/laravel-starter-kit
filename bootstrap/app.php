@@ -3,6 +3,7 @@
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use Illuminate\Http\Request;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -15,5 +16,12 @@ return Application::configure(basePath: dirname(__DIR__))
         //
     })
     ->withExceptions(function (Exceptions $exceptions) {
-        //
+        $exceptions->render(function (Throwable $th, Request $request) {
+            return response()->error(
+                $th->getMessage(),
+                $th instanceof \Symfony\Component\HttpKernel\Exception\HttpException
+                    ? $th->getStatusCode()
+                    : 500
+            );
+        });
     })->create();
