@@ -4,6 +4,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -17,11 +18,16 @@ return Application::configure(basePath: dirname(__DIR__))
     })
     ->withExceptions(function (Exceptions $exceptions) {
         $exceptions->render(function (Throwable $th, Request $request) {
+            $errorCode = match (get_class($th)) {
+                ValidationException::class => 422,
+                default => 500
+            };
+
             return response()->error(
                 $th->getMessage(),
                 $th instanceof \Symfony\Component\HttpKernel\Exception\HttpException
                     ? $th->getStatusCode()
-                    : 500
+                    : $errorCode,
             );
         });
     })->create();
