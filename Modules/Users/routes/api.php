@@ -1,8 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Modules\Users\Http\Controllers\UsersController;
+use Modules\Users\Http\Controllers\UsersIndexController;
 
-Route::middleware(['auth:sanctum'])->prefix('v1')->group(function () {
-    Route::apiResource('users', UsersController::class)->names('users');
+Route::prefix('users')->name('users.')->group(static function () {
+    Route::get('/', UsersIndexController::class)->name('index');
 });

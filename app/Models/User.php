@@ -3,10 +3,13 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Builders\UserBuilder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Modules\Users\Enums\Statuses;
 
 /**
  * @property int    $id
@@ -24,6 +27,8 @@ class User extends Authenticatable
 {
     use HasFactory, Notifiable, SoftDeletes;
 
+    protected static string $builder = UserBuilder::class;
+
     protected $guarded = [
         'id',
         'email_verified_at',
@@ -40,7 +45,14 @@ class User extends Authenticatable
     {
         return [
             'email_verified_at' => 'datetime',
-            'password' => 'hashed',
+            'password'          => 'hashed',
         ];
+    }
+
+    public function status(): Attribute
+    {
+        return new Attribute(
+            get: fn (string $value): Statuses => Statuses::from($value),
+        );
     }
 }
