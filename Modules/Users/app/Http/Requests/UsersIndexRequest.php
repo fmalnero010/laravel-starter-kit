@@ -24,7 +24,7 @@ class UsersIndexRequest extends FormRequest implements DataTransferableRequest
             self::STATUS     => ['nullable', new Enum(Statuses::class)],
             self::FIRST_NAME => ['nullable', 'string', new AlphaNumSpaces],
             self::LAST_NAME  => ['nullable', 'string', new AlphaNumSpaces],
-            self::EMAIL      => ['nullable', 'string', new AlphaNumSpaces],
+            self::EMAIL      => ['nullable', 'string', AlphaNumSpaces::withAllowedCharacters('@.-_')],
         ];
     }
 
