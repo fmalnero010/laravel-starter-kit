@@ -105,4 +105,5 @@ return [
 
     'prefix' => env('CACHE_PREFIX', Str::slug(env('APP_NAME', 'laravel'), '_').'_cache_'),
 
+    'default_lifetime' => env('CACHE_DEFAULT_LIFETIME', 60),
 ];
