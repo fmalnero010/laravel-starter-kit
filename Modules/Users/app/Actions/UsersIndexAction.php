@@ -8,7 +8,7 @@ use App\Builders\UserBuilder;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Cache\Repository as CacheRepository;
-use Illuminate\Support\Collection;
+use Illuminate\Contracts\Pagination\Paginator;
 use Modules\Users\DataTransferObjects\UsersIndexRequestDto;
 
 class UsersIndexAction
@@ -20,14 +20,14 @@ class UsersIndexAction
     }
 
     /**
-     * @return Collection<User>
+     * @return Paginator<User>
      */
-    public function execute(UsersIndexRequestDto $dto): Collection
+    public function execute(UsersIndexRequestDto $dto): Paginator
     {
         return $this->cache->tags([self::CACHE_TAG])->remember(
             $this->getCacheKey($dto),
             $this->getCacheLifetime(),
-            fn (): Collection => $this->listUsersWithoutCache($dto)
+            fn (): Paginator => $this->listUsersWithoutCache($dto)
         );
     }
 
@@ -42,9 +42,9 @@ class UsersIndexAction
     }
 
     /**
-     * @return Collection<User>
+     * @return Paginator<User>
      */
-    public function listUsersWithoutCache(UsersIndexRequestDto $dto): Collection
+    public function listUsersWithoutCache(UsersIndexRequestDto $dto): Paginator
     {
         return User::query()
             ->when(
@@ -63,6 +63,9 @@ class UsersIndexAction
                 filled($dto->email),
                 static fn (UserBuilder $query): UserBuilder => $query->whereEmail($dto->email)
             )
-            ->get();
+            ->simplePaginate(
+                perPage:  $dto->paginatorDto->perPage,
+                page:     $dto->paginatorDto->page,
+            );
     }
 }

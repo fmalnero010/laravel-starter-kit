@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Modules\Users\Http\Requests;
 
 use App\Contracts\DataTransferableRequest;
+use App\DataTransferObjects\PaginatorDto;
 use App\Http\Requests\APIRequest;
 use App\Rules\AlphaNumSpaces;
 use Illuminate\Validation\Rules\Enum;
@@ -38,10 +39,14 @@ class UsersIndexRequest extends APIRequest implements DataTransferableRequest
     public function toDto(): UsersIndexRequestDto
     {
         return new UsersIndexRequestDto(
-            status:    Statuses::tryFrom($this->string(self::STATUS)->toString()),
-            firstName: $this->string(self::FIRST_NAME)->toString(),
-            lastName:  $this->string(self::LAST_NAME)->toString(),
-            email:     $this->string(self::EMAIL)->toString(),
+            status:       Statuses::tryFrom($this->string(self::STATUS)->toString()),
+            firstName:    $this->string(self::FIRST_NAME)->toString(),
+            lastName:     $this->string(self::LAST_NAME)->toString(),
+            email:        $this->string(self::EMAIL)->toString(),
+            paginatorDto: new PaginatorDto(
+                perPage: $this->integer('perPage'),
+                page:    $this->integer('page'),
+            )
         );
     }
 

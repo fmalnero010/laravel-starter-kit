@@ -5,7 +5,7 @@ namespace Modules\Users\Http\Controllers;
 use Illuminate\Http\JsonResponse;
 use Modules\Users\Actions\UsersIndexAction;
 use Modules\Users\Http\Requests\UsersIndexRequest;
-use Modules\Users\Transformers\UserResource;
+use Modules\Users\Transformers\UserPaginatorResource;
 
 class UsersIndexController
 {
@@ -17,7 +17,7 @@ class UsersIndexController
         $users = $usersIndexAction->execute($usersIndexRequest->toDto());
 
         return response()->success(
-            UserResource::collection($users)
+            new UserPaginatorResource($users),
         );
     }
 }
