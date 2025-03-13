@@ -56,6 +56,14 @@ services:
                 - ping
             retries: 3
             timeout: 5s
+    redisinsight:
+        image: 'redis/redisinsight:latest'
+        ports:
+            - '5540:5540'
+        networks:
+            - sail
+        depends_on:
+            - redis
     mailpit:
         image: 'axllent/mailpit:latest'
         ports:
