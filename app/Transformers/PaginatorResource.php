@@ -34,38 +34,48 @@ abstract class PaginatorResource extends BaseResourceCollection
 
     protected function transformLinks(Paginator $paginator, Request $request): array
     {
-        $query = $request->except('page'); // Remove page to avoid conflicts
-        $query['filter.page'] = '{page}';  // Define pagination with dot-notation
+        $query = $request->except('page');
+        $currentPage = $paginator->currentPage();
+        $nextPageUrl = $paginator->nextPageUrl();
+        $prevPageUrl = $paginator->previousPageUrl();
 
         return [
-            'first' => $this->replacePageParam($paginator->url(1), $query),
-            'prev'  => $paginator->previousPageUrl()
-                ? $this->replacePageParam($paginator->previousPageUrl(), $query)
+            'first' => $this->replacePageParam($paginator->url(1), $query, 1),
+            'prev'  => $prevPageUrl
+                ? $this->replacePageParam($prevPageUrl, $query, $currentPage - 1)
                 : null,
-            'next'  => $paginator->nextPageUrl()
-                ? $this->replacePageParam($paginator->nextPageUrl(), $query)
+            'next'  => $nextPageUrl
+                ? $this->replacePageParam($nextPageUrl, $query, $currentPage + 1)
                 : null,
         ];
     }
 
-    protected function replacePageParam(string $url, array $query): string
+    protected function replacePageParam(string $url, array $query, int $page): string
     {
-        // Remove old 'page', 'per_page' y 'filter.page' to avoid conflicts
-        unset($query['page'], $query['per_page'], $query['filter.page']);
+        // Remove 'page' and 'filter.page' to avoid conflicts
+        unset($query['page'], $query['filter.page']);
 
-        // Overwrite paginate[page] to 1
-        $query = array_merge($query, ['paginate' => ['page' => 1]]);
+        // Keep paginate[perPage] if it is in the request
+        $perPage = $query['paginate']['perPage'] ?? null;
 
-        // Generate query without encoding brackets
+        // Overwrite paginate[page] with the correct value for the current page
+        $query['paginate']['page'] = $page;
+
+        // If paginate[perPage] was there before, add it again
+        if ($perPage !== null) {
+            $query['paginate']['perPage'] = $perPage;
+        }
+
+        // Generate query without encoding the brackets
         $queryString = http_build_query($query, '', '&', PHP_QUERY_RFC3986);
 
         // Replace brackets encoding
         $queryString = str_replace(['%5B', '%5D'], ['[', ']'], $queryString);
 
-        // Decode special characters if there are any
+        // Decode special characters if any
         $queryString = urldecode($queryString);
 
-        // Eliminate the old not-dot-notation pagination
+        // Eliminate old pagination without dot-notation if exists
         $url = preg_replace('/\?page=\d+/', '', $url);
 
         return $url . '?' . $queryString;

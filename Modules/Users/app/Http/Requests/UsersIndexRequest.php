@@ -18,12 +18,16 @@ class UsersIndexRequest extends APIRequest implements DataTransferableRequest
     private const string FIRST_NAME = 'firstName';
     private const string LAST_NAME  = 'lastName';
     private const string EMAIL      = 'email';
+    private const string PAGE       = 'page';
+    private const string PER_PAGE   = 'perPage';
 
     protected function prepareForValidation(): void
     {
         $this->removeExactDuplicateInputs();
         $this->removeConflictingKeys($this->listFilterParametersKeys());
         $this->extractDotNotationFor('filter');
+        $this->removeConflictingKeys($this->listPaginateParametersKeys());
+        $this->extractDotNotationFor('paginate');
     }
 
     public function rules(): array
@@ -33,6 +37,8 @@ class UsersIndexRequest extends APIRequest implements DataTransferableRequest
             self::FIRST_NAME => ['nullable', 'string', new AlphaNumSpaces],
             self::LAST_NAME  => ['nullable', 'string', new AlphaNumSpaces],
             self::EMAIL      => ['nullable', 'string', AlphaNumSpaces::withAllowedCharacters('@.-_')],
+            self::PAGE       => ['nullable', 'integer', 'min:1'],
+            self::PER_PAGE   => ['nullable', 'integer', 'min:1'],
         ];
     }
 
@@ -57,6 +63,14 @@ class UsersIndexRequest extends APIRequest implements DataTransferableRequest
             self::FIRST_NAME,
             self::LAST_NAME,
             self::EMAIL,
+        ];
+    }
+
+    private function listPaginateParametersKeys(): array
+    {
+        return [
+            self::PAGE,
+            self::PER_PAGE,
         ];
     }
 }
