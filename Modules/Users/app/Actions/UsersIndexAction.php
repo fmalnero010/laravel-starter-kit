@@ -33,7 +33,7 @@ class UsersIndexAction
 
     private function getCacheKey(UsersIndexRequestDto $dto): string
     {
-        return self::CACHE_TAG . '_' . md5(json_encode($dto));
+        return self::CACHE_TAG . '_' . md5(serialize($dto));
     }
 
     private function getCacheLifetime(): Carbon
