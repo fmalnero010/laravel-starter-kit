@@ -75,6 +75,7 @@ return [
             'driver' => 'redis',
             'connection' => env('REDIS_CACHE_CONNECTION', 'cache'),
             'lock_connection' => env('REDIS_CACHE_LOCK_CONNECTION', 'default'),
+            'database' => env('REDIS_DB', 1),
         ],
 
         'dynamodb' => [
