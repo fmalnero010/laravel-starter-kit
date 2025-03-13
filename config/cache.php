@@ -75,6 +75,7 @@ return [
             'driver' => 'redis',
             'connection' => env('REDIS_CACHE_CONNECTION', 'cache'),
             'lock_connection' => env('REDIS_CACHE_LOCK_CONNECTION', 'default'),
+            'database' => env('REDIS_DB', 1),
         ],
 
         'dynamodb' => [
@@ -105,4 +106,5 @@ return [
 
     'prefix' => env('CACHE_PREFIX', Str::slug(env('APP_NAME', 'laravel'), '_').'_cache_'),
 
+    'default_lifetime' => env('CACHE_DEFAULT_LIFETIME', 60),
 ];

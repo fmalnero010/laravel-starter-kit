@@ -11,9 +11,9 @@ class UserBuilder extends Builder
 {
     /**
      * @param Statuses $status
-     * @return UserBuilder
+     * @return self
      */
-    public function whereStatus(Statuses $status): UserBuilder
+    public function whereStatus(Statuses $status): self
     {
         return $this->where('status', $status);
     }
@@ -21,9 +21,9 @@ class UserBuilder extends Builder
     /**
      * @param string $firstName
      * @param bool $strict
-     * @return UserBuilder
+     * @return self
      */
-    public function whereFirstName(string $firstName, bool $strict = false): UserBuilder
+    public function whereFirstName(string $firstName, bool $strict = false): self
     {
         return $strict
             ? $this->where('first_name', $firstName)
@@ -33,9 +33,9 @@ class UserBuilder extends Builder
     /**
      * @param string $lastName
      * @param bool $strict
-     * @return UserBuilder
+     * @return self
      */
-    public function whereLastName(string $lastName, bool $strict = false): UserBuilder
+    public function whereLastName(string $lastName, bool $strict = false): self
     {
         return $strict
             ? $this->where('last_name', $lastName)
@@ -45,9 +45,9 @@ class UserBuilder extends Builder
     /**
      * @param string $email
      * @param bool $strict
-     * @return UserBuilder
+     * @return self
      */
-    public function whereEmail(string $email, bool $strict = false): UserBuilder
+    public function whereEmail(string $email, bool $strict = false): self
     {
         return $strict
             ? $this->where('email', $email)

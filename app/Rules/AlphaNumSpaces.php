@@ -8,17 +8,23 @@ use Illuminate\Translation\PotentiallyTranslatedString;
 
 class AlphaNumSpaces implements ValidationRule
 {
-    /**
-     * Run the validation rule.
-     *
-     * @param Closure(string, ?string=): PotentiallyTranslatedString $fail
-     */
+    protected string $extraChars = '';
+
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        if (preg_match('/^[a-zA-Z0-9 ]+$/', $value)) {
+        $pattern = '/^[a-zA-Z0-9 ' . preg_quote($this->extraChars, '/') . ']+$/';
+
+        if (preg_match($pattern, $value)) {
             return;
         }
 
         $fail('The :attribute can not contain special characters.');
+    }
+
+    public static function withAllowedCharacters(string $chars): self
+    {
+        $class = new self;
+        $class->extraChars = $chars;
+        return $class;
     }
 }
