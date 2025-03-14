@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\ServiceProvider;
+use L5Swagger\L5SwaggerServiceProvider;
 use Symfony\Component\HttpFoundation\Response as HttpResponse;
 
 class AppServiceProvider extends ServiceProvider
@@ -33,5 +34,10 @@ class AppServiceProvider extends ServiceProvider
                 'data' => $data,
             ], $status);
         });
+    }
+
+    public function register(): void
+    {
+        $this->app->register(L5SwaggerServiceProvider::class);
     }
 }
