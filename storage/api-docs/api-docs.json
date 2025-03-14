@@ -30,13 +30,76 @@
                     },
                     "400": {
                         "description": "Bad request"
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/unauthorized"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/validation-error"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "unauthorized": {
+                "title": "Forbidden",
+                "description": "You don't have permission to access this resource.",
+                "required": [
+                    "message"
+                ],
+                "properties": {
+                    "status": {
+                        "type": "integer",
+                        "example": -1
+                    },
+                    "message": {
+                        "type": "string",
+                        "example": "ERROR"
+                    },
+                    "data": {
+                        "type": "string",
+                        "example": "This action is unauthorized."
                     }
                 },
-                "security": [
-                    {
-                        "api_key_security_example": []
+                "type": "object"
+            },
+            "validation-error": {
+                "title": "Validation Error",
+                "description": "One or more fields have an error.",
+                "required": [
+                    "message"
+                ],
+                "properties": {
+                    "status": {
+                        "type": "integer",
+                        "example": -1
+                    },
+                    "message": {
+                        "type": "string",
+                        "example": "ERROR"
+                    },
+                    "data": {
+                        "type": "string",
+                        "example": "The field :field :problem"
                     }
-                ]
+                },
+                "type": "object"
             }
         }
     },
