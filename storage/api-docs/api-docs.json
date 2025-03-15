@@ -1,0 +1,330 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Laravel-Starter-Kit",
+        "description": "A Laravel-Starter-Kit for building scalable and optimal applications",
+        "contact": {
+            "email": "facundomalnero010@gmail.com"
+        },
+        "license": {
+            "name": "Apache 2.0",
+            "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
+        },
+        "version": "1.0.0",
+        "x-logo": {
+            "url": "https://via.placeholder.com/190x90.png?text=L5-Swagger"
+        }
+    },
+    "paths": {
+        "/api/users": {
+            "get": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Paginated list of users",
+                "description": "Returns a paginated list of users",
+                "operationId": "users-index",
+                "parameters": [
+                    {
+                        "name": "filter[firstName]",
+                        "in": "query",
+                        "description": "Filter by first name",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "filter[lastName]",
+                        "in": "query",
+                        "description": "Filter by last name",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "filter[email]",
+                        "in": "query",
+                        "description": "Filter by email",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "email"
+                        }
+                    },
+                    {
+                        "name": "filter[status]",
+                        "in": "query",
+                        "description": "User status",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "A",
+                                "P",
+                                "I"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "paginate[perPage]",
+                        "in": "query",
+                        "description": "Set the number of items per page",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "paginate[page]",
+                        "in": "query",
+                        "description": "Set the page number",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Paginated list of users",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "SUCCESS"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "data": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "$ref": "#/components/schemas/user"
+                                                    }
+                                                },
+                                                "links": {
+                                                    "$ref": "#/components/schemas/pagination-links"
+                                                },
+                                                "meta": {
+                                                    "$ref": "#/components/schemas/pagination-meta"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/unauthorized"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/validation-error"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/server-error"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "user": {
+                "title": "User",
+                "description": "User model representation",
+                "required": [
+                    "id",
+                    "status",
+                    "firstName",
+                    "lastName",
+                    "email"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "status": {
+                        "type": "string",
+                        "enum": [
+                            "A",
+                            "P",
+                            "I"
+                        ],
+                        "example": "A"
+                    },
+                    "firstName": {
+                        "type": "string",
+                        "example": "Facundo"
+                    },
+                    "lastName": {
+                        "type": "string",
+                        "example": "Malnero"
+                    },
+                    "email": {
+                        "type": "string",
+                        "format": "email",
+                        "example": "facundomalnero010@gmail.com"
+                    }
+                },
+                "type": "object"
+            },
+            "pagination-links": {
+                "title": "Pagination Links",
+                "description": "Links for navigating paginated results",
+                "properties": {
+                    "first": {
+                        "type": "string",
+                        "example": "http://localhost/api/users?paginate[page]=1",
+                        "nullable": true
+                    },
+                    "prev": {
+                        "type": "string",
+                        "example": "http://localhost/api/users?paginate[page]=1",
+                        "nullable": true
+                    },
+                    "next": {
+                        "type": "string",
+                        "example": "http://localhost/api/users?paginate[page]=2",
+                        "nullable": true
+                    }
+                },
+                "type": "object"
+            },
+            "pagination-meta": {
+                "title": "Pagination Metadata",
+                "description": "Pagination details",
+                "properties": {
+                    "current_page": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "per_page": {
+                        "type": "integer",
+                        "example": 15
+                    },
+                    "from": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "to": {
+                        "type": "integer",
+                        "example": 2
+                    }
+                },
+                "type": "object"
+            },
+            "server-error": {
+                "title": "Internal Server Error",
+                "description": "Internal Server Error",
+                "required": [
+                    "message"
+                ],
+                "properties": {
+                    "status": {
+                        "type": "integer",
+                        "example": -1
+                    },
+                    "message": {
+                        "type": "string",
+                        "example": "ERROR"
+                    },
+                    "error": {
+                        "type": "string",
+                        "example": "There has been an internal server error."
+                    }
+                },
+                "type": "object"
+            },
+            "unauthorized": {
+                "title": "Forbidden",
+                "description": "You don't have permission to access this resource.",
+                "required": [
+                    "message"
+                ],
+                "properties": {
+                    "status": {
+                        "type": "integer",
+                        "example": -1
+                    },
+                    "message": {
+                        "type": "string",
+                        "example": "ERROR"
+                    },
+                    "error": {
+                        "type": "string",
+                        "example": "This action is unauthorized."
+                    }
+                },
+                "type": "object"
+            },
+            "validation-error": {
+                "title": "Validation Error",
+                "description": "One or more fields have an error.",
+                "required": [
+                    "message"
+                ],
+                "properties": {
+                    "status": {
+                        "type": "integer",
+                        "example": -1
+                    },
+                    "message": {
+                        "type": "string",
+                        "example": "ERROR"
+                    },
+                    "error": {
+                        "properties": {
+                            "field": {
+                                "type": "array",
+                                "items": {
+                                    "type": "string",
+                                    "example": "The :field field is required."
+                                }
+                            }
+                        },
+                        "type": "object"
+                    }
+                },
+                "type": "object"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Users",
+            "description": "Users"
+        }
+    ]
+}
