@@ -22,7 +22,7 @@ describe('Users Index', function () {
 
         $expectedUserCamelKeys = collect($expectedUserAttributes)
             ->mapWithKeys(
-                fn ($value, $key): array => [Str::camel($key) => $value]
+                fn (mixed $value, string $key): array => [Str::camel($key) => $value]
             )
             ->keys()
             ->toArray();
