@@ -8,6 +8,6 @@ use Spatie\Permission\Middleware\PermissionMiddleware;
 Route::prefix('users')
     ->name('users.')
     ->group(static function (): void {
-        Route::get('/', UsersIndexController::class)->name('index')
-            ->middleware(PermissionMiddleware::using(Permissions::UsersList));
+        Route::get('/', UsersIndexController::class)->name('index');
+            // ->middleware(PermissionMiddleware::using(Permissions::UsersList));
     });
