@@ -11,6 +11,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Modules\Users\Enums\Statuses;
+use Spatie\Permission\Traits\HasRoles;
 
 /**
  * @property int    $id
@@ -26,7 +27,11 @@ use Modules\Users\Enums\Statuses;
  */
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable, SoftDeletes, HasApiTokens;
+    use HasFactory;
+    use Notifiable;
+    use SoftDeletes;
+    use HasApiTokens;
+    use HasRoles;
 
     protected static string $builder = UserBuilder::class;
 
@@ -52,6 +57,11 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password'          => 'hashed',
         ];
+    }
+
+    public function guardName(): string
+    {
+        return 'api';
     }
 
     public function status(): Attribute
