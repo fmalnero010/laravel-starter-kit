@@ -38,7 +38,11 @@ class User extends Authenticatable
     ];
 
     protected $hidden = [
+        'email_verified_at',
         'password',
+        'created_at',
+        'updated_at',
+        'deleted_at',
     ];
 
     protected function casts(): array
@@ -52,7 +56,8 @@ class User extends Authenticatable
     public function status(): Attribute
     {
         return new Attribute(
-            get: fn (string $value): Statuses => Statuses::from($value),
+            get: fn (string $status): Statuses => Statuses::from($status),
+            set: fn (Statuses $status): string => $status->value,
         );
     }
 }
