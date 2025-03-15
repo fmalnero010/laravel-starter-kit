@@ -94,9 +94,17 @@
                         "type": "string",
                         "example": "ERROR"
                     },
-                    "data": {
-                        "type": "string",
-                        "example": "The field :field :problem"
+                    "error": {
+                        "properties": {
+                            "field": {
+                                "type": "array",
+                                "items": {
+                                    "type": "string",
+                                    "example": "The :field field is required."
+                                }
+                            }
+                        },
+                        "type": "object"
                     }
                 },
                 "type": "object"

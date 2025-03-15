@@ -22,9 +22,16 @@ use OpenApi\Annotations as OA;
  *         example="ERROR"
  *     ),
  *     @OA\Property(
- *         property="data",
- *         type="string",
- *         example="The field :field :problem"
+ *         property="error",
+ *         type="object",
+ *         @OA\Property(
+ *             property="field",
+ *             type="array",
+ *             @OA\Items(
+ *                 type="string",
+ *                 example="The :field field is required."
+ *             )
+ *         )
  *     )
  * )
  */
