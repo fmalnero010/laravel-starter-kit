@@ -12,11 +12,12 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        // UserSeeder must be run apart as it is only for local development
+
         $this->call([
             RoleSeeder::class,
             PermissionSeeder::class,
             PermissionsByRoleSeeder::class,
-            UserSeeder::class,
         ]);
     }
 }
