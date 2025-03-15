@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Annotations\Schemas;
+namespace App\Annotations\Schemas\Responses;
 
 use OpenApi\Annotations as OA;
 
@@ -22,7 +22,7 @@ use OpenApi\Annotations as OA;
  *         example="ERROR"
  *     ),
  *     @OA\Property(
- *         property="data",
+ *         property="error",
  *         type="string",
  *         example="This action is unauthorized."
  *     )

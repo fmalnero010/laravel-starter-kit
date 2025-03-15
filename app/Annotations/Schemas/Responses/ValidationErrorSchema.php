@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Annotations\Schemas;
+namespace App\Annotations\Schemas\Responses;
 
 use OpenApi\Annotations as OA;
 

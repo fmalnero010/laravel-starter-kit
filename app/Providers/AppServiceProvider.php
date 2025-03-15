@@ -32,7 +32,7 @@ class AppServiceProvider extends ServiceProvider
                     : response()->json([
                         'status' => -1,
                         'message' => 'ERROR',
-                        'data' => $data,
+                        'error' => $data,
                     ], $status)
         );
 
