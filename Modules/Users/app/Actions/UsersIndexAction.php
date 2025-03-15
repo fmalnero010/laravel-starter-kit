@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Modules\Users\Actions;
 
 use App\Builders\UserBuilder;
-use App\Models\User;
+use Modules\Users\Models\User;
 use Carbon\Carbon;
 use Illuminate\Cache\Repository as CacheRepository;
 use Illuminate\Contracts\Pagination\Paginator;
