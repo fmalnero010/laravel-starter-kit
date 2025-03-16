@@ -30,7 +30,7 @@ jobs:
         image: redis:alpine
         ports:
           - 6379:6379
-        options: --health-cmd "redis-cli ping" --health-interval 5s --health-timeout 5s --health-retries 10
+        options: --health-cmd "redis-server --daemonize yes && redis-cli ping" --health-interval 5s --health-timeout 5s --health-retries 10
 
     steps:
       - name: 🛠️ Clone the repository
@@ -58,7 +58,7 @@ jobs:
           echo "CACHE_DRIVER=redis" >> .env
           echo "SESSION_DRIVER=array" >> .env
           echo "QUEUE_CONNECTION=sync" >> .env
-          echo "REDIS_HOST=redis" >> .env
+          echo "REDIS_HOST=127.0.0.1" >> .env
           echo "REDIS_PORT=6379" >> .env
 
       - name: 🔄 Clear config cache
@@ -67,13 +67,22 @@ jobs:
       - name: 🔑 Generate application key
         run: php artisan key:generate
 
+      - name: 🔍 Debug Redis Logs (Opcional, para ver errores)
+        run: docker logs $(docker ps -q --filter "ancestor=redis:alpine")
+
       - name: 🏗️ Wait for Redis to be ready
         run: |
           echo "Waiting for Redis to be ready..."
-          while ! nc -z redis 6379; do
-            sleep 1
+          for i in {1..30}; do
+            if redis-cli -h 127.0.0.1 -p 6379 ping | grep -q PONG; then
+              echo "Redis is up!"
+              exit 0
+            fi
+            echo "Waiting for Redis... attempt $i"
+            sleep 2
           done
-          echo "Redis is up!"
+          echo "Redis did not start in time"
+          exit 1
 
       - name: 🏗️ Run migrations for testing
         run: php artisan migrate --env=testing --force
