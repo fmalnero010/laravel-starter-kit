@@ -30,6 +30,7 @@ jobs:
         image: redis:alpine
         ports:
           - 6379:6379
+        options: --health-cmd "redis-cli ping" --health-interval 5s --health-timeout 5s --health-retries 10
 
     steps:
       - name: 🛠️ Clone the repository
@@ -45,7 +46,7 @@ jobs:
       - name: 📦 Install dependencies
         run: composer install --no-dev --optimize-autoloader
 
-      - name: 🗝️ Configure environment variables (No Redis)
+      - name: 🗝️ Configure environment variables
         run: |
           cp .env.example .env
           echo "DB_CONNECTION=mysql" >> .env
@@ -54,23 +55,28 @@ jobs:
           echo "DB_DATABASE=testing_db" >> .env
           echo "DB_USERNAME=test_user" >> .env
           echo "DB_PASSWORD=test_password" >> .env
-          echo "CACHE_DRIVER=array" >> .env  # ⚠️ Desactiva Redis antes de migraciones
+          echo "CACHE_DRIVER=redis" >> .env
           echo "SESSION_DRIVER=array" >> .env
           echo "QUEUE_CONNECTION=sync" >> .env
+          echo "REDIS_HOST=redis" >> .env
+          echo "REDIS_PORT=6379" >> .env
 
-      - name: 🔄 Clear config cache (Forzar Laravel a usar CACHE_DRIVER=array)
+      - name: 🔄 Clear config cache
         run: php artisan config:clear
 
       - name: 🔑 Generate application key
         run: php artisan key:generate
 
+      - name: 🏗️ Wait for Redis to be ready
+        run: |
+          until redis-cli -h redis ping | grep -q PONG; do
+            echo "Waiting for Redis..."
+            sleep 2
+          done
+          echo "Redis is ready!"
+
       - name: 🏗️ Run migrations for testing
         run: php artisan migrate --env=testing --force
-
-      - name: 🔄 Enable Redis for tests (Solo después de migraciones)
-        run: |
-          echo "CACHE_DRIVER=redis" >> .env
-          php artisan config:clear
 
       - name: 🚀 Run Tests
         run: php artisan test
