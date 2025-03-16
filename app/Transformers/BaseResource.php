@@ -48,7 +48,8 @@ abstract class BaseResource extends JsonResource
     }
 
     /**
-     * @param  array<string>  $keys
+     * @param  array<string> $keys
+     * @return static
      */
     public function except(array $keys): static
     {
@@ -58,7 +59,8 @@ abstract class BaseResource extends JsonResource
     }
 
     /**
-     * @param  array<string>  $keys
+     * @param  array<string> $keys
+     * @return static
      */
     public function only(array $keys): static
     {
