@@ -5,50 +5,41 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Str;
 use Tests\TestCase;
 
-uses(
-    TestCase::class,
-    DatabaseTransactions::class
-);
+uses(TestCase::class, DatabaseTransactions::class);
 
-describe('Users Index', function () {
+test('should return a list of users', function () {
     $endpoint = '/api/users';
+    $user = UserFactory::new()->createOne();
 
-    it('should return a list of users', function () use ($endpoint): void {
-        $user = UserFactory::new()->createOne();
+    $expectedUserAttributes = $user->makeHidden($user->getHidden())->toArray();
+    $expectedUserCamelKeys = collect($expectedUserAttributes)
+        ->mapWithKeys(
+            fn (mixed $value, string $key): array => [Str::camel($key) => $value]
+        )
+        ->keys()
+        ->toArray();
 
-        $expectedUserAttributes = $user->makeHidden(
-            $user->getHidden()
-        )->toArray();
-
-        $expectedUserCamelKeys = collect($expectedUserAttributes)
-            ->mapWithKeys(
-                fn (mixed $value, string $key): array => [Str::camel($key) => $value]
-            )
-            ->keys()
-            ->toArray();
-
-        $this
-            ->getJson($endpoint)
-            ->assertOk()
-            ->assertJsonStructure([
-                'status',
-                'message',
+    /** @var TestCase $this */
+    $this->getJson($endpoint)
+        ->assertOk()
+        ->assertJsonStructure([
+            'status',
+            'message',
+            'data' => [
                 'data' => [
-                    'data' => [
-                        '*' => $expectedUserCamelKeys
-                    ],
-                    'meta' => [
-                        'current_page',
-                        'from',
-                        'per_page',
-                        'to',
-                    ],
-                    'links' => [
-                        'first',
-                        'prev',
-                        'next',
-                    ]
-                ]
-            ]);
-    });
+                    '*' => $expectedUserCamelKeys,
+                ],
+                'meta' => [
+                    'current_page',
+                    'from',
+                    'per_page',
+                    'to',
+                ],
+                'links' => [
+                    'first',
+                    'prev',
+                    'next',
+                ],
+            ],
+        ]);
 });

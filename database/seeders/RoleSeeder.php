@@ -24,17 +24,16 @@ class RoleSeeder extends Seeder
     }
 
     /**
-     * @return array<int, array{name: string}>
+     * @return array<int, array{name: string, guard_name: string}>
      */
     private function getRolesArray(): array
     {
-        return collect(Roles::cases())
-            ->map(
-                fn (Roles $role): array => [
-                    'name'       => $role->value,
-                    'guard_name' => 'api',
-                ]
-            )
-            ->toArray();
+        return array_map(
+            fn (Roles $role): array => [
+                'name' => $role->value,
+                'guard_name' => 'api',
+            ],
+            Roles::cases()
+        );
     }
 }

@@ -17,11 +17,11 @@ class UserResource extends BaseResource
         $user = $this->resource;
 
         return [
-            'id'        => $user->id,
-            'status'    => $user->status,
+            'id' => $user->id,
+            'status' => $user->status,
             'firstName' => $user->first_name,
-            'lastName'  => $user->last_name,
-            'email'     => $user->email,
+            'lastName' => $user->last_name,
+            'email' => $user->email,
         ];
     }
 }

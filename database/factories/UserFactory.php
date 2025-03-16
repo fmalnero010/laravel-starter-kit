@@ -19,6 +19,7 @@ class UserFactory extends Factory
      * The current password being used by the factory.
      */
     protected static ?string $password = 'Password1!';
+
     protected $model = User::class;
 
     /**
@@ -43,14 +44,14 @@ class UserFactory extends Factory
         ]);
     }
 
-    public function withStatus(Statuses|null $status = null): static
+    public function withStatus(?Statuses $status = null): static
     {
         return $this->state(fn (array $attributes): array => [
             'status' => $status ?? Statuses::ACTIVE,
         ]);
     }
 
-    public function softDeleted(Carbon|null $date = null): static
+    public function softDeleted(?Carbon $date = null): static
     {
         return $this->state(fn (array $attributes): array => [
             'deleted_at' => $date ?? now(),

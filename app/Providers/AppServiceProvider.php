@@ -14,8 +14,7 @@ class AppServiceProvider extends ServiceProvider
     {
         Response::macro(
             'success',
-            fn ($data = [], int $status = HttpResponse::HTTP_OK): JsonResponse =>
-                $data === null
+            fn ($data = [], int $status = HttpResponse::HTTP_OK): JsonResponse => $data === null
                     ? response()->json(null, 204)
                     : response()->json([
                         'status' => 1,
@@ -26,8 +25,7 @@ class AppServiceProvider extends ServiceProvider
 
         Response::macro(
             'error',
-            fn ($data = [], int $status = HttpResponse::HTTP_BAD_REQUEST): JsonResponse =>
-                $data === null
+            fn ($data = [], int $status = HttpResponse::HTTP_BAD_REQUEST): JsonResponse => $data === null
                     ? response()->json(null, 204)
                     : response()->json([
                         'status' => -1,
@@ -38,12 +36,11 @@ class AppServiceProvider extends ServiceProvider
 
         Response::macro(
             'failedValidation',
-            fn ($errors = [], int $status = HttpResponse::HTTP_UNPROCESSABLE_ENTITY): JsonResponse =>
-                response()->json([
-                    'status' => -1,
-                    'message' => 'ERROR',
-                    'error' => $errors,
-                ], $status)
+            fn ($errors = [], int $status = HttpResponse::HTTP_UNPROCESSABLE_ENTITY): JsonResponse => response()->json([
+                'status' => -1,
+                'message' => 'ERROR',
+                'error' => $errors,
+            ], $status)
         );
     }
 

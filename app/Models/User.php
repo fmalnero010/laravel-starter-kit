@@ -2,10 +2,8 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Builders\UserBuilder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -14,7 +12,7 @@ use Modules\Users\Enums\Statuses;
 use Spatie\Permission\Traits\HasRoles;
 
 /**
- * @property int    $id
+ * @property int $id
  * @property string $status
  * @property string $first_name
  * @property string $last_name
@@ -27,11 +25,10 @@ use Spatie\Permission\Traits\HasRoles;
  */
 class User extends Authenticatable
 {
-    use HasFactory;
-    use Notifiable;
-    use SoftDeletes;
     use HasApiTokens;
     use HasRoles;
+    use Notifiable;
+    use SoftDeletes;
 
     protected static string $builder = UserBuilder::class;
 
@@ -55,7 +52,7 @@ class User extends Authenticatable
     {
         return [
             'email_verified_at' => 'datetime',
-            'password'          => 'hashed',
+            'password' => 'hashed',
         ];
     }
 
@@ -64,10 +61,13 @@ class User extends Authenticatable
         return 'api';
     }
 
+    /**
+     * @return Attribute<Statuses, string>
+     */
     public function status(): Attribute
     {
-        return new Attribute(
-            get: fn (string $status): Statuses => Statuses::from($status),
+        return Attribute::make(
+            get: fn (string $status, array $attributes): Statuses => Statuses::from($status),
             set: fn (Statuses $status): string => $status->value,
         );
     }

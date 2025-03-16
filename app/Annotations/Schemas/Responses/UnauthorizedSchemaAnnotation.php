@@ -11,6 +11,7 @@ use OpenApi\Annotations as OA;
  *     description="You don't have permission to access this resource.",
  *     type="object",
  *     required={"message"},
+ *
  *     @OA\Property(
  *         property="status",
  *         type="integer",
@@ -28,6 +29,4 @@ use OpenApi\Annotations as OA;
  *     )
  * )
  */
-class UnauthorizedSchemaAnnotation
-{
-}
+class UnauthorizedSchemaAnnotation {}

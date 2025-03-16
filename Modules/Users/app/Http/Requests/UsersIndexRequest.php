@@ -14,12 +14,17 @@ use Modules\Users\Enums\Statuses;
 
 class UsersIndexRequest extends APIRequest implements DataTransferableRequest
 {
-    private const string STATUS     = 'status';
+    private const string STATUS = 'status';
+
     private const string FIRST_NAME = 'firstName';
-    private const string LAST_NAME  = 'lastName';
-    private const string EMAIL      = 'email';
-    private const string PAGE       = 'page';
-    private const string PER_PAGE   = 'perPage';
+
+    private const string LAST_NAME = 'lastName';
+
+    private const string EMAIL = 'email';
+
+    private const string PAGE = 'page';
+
+    private const string PER_PAGE = 'perPage';
 
     protected function prepareForValidation(): void
     {
@@ -33,25 +38,25 @@ class UsersIndexRequest extends APIRequest implements DataTransferableRequest
     public function rules(): array
     {
         return [
-            self::STATUS     => ['nullable', new Enum(Statuses::class)],
+            self::STATUS => ['nullable', new Enum(Statuses::class)],
             self::FIRST_NAME => ['nullable', 'string', new AlphaNumSpaces],
-            self::LAST_NAME  => ['nullable', 'string', new AlphaNumSpaces],
-            self::EMAIL      => ['nullable', 'string', AlphaNumSpaces::withAllowedCharacters('@.-_')],
-            self::PAGE       => ['nullable', 'integer', 'min:1'],
-            self::PER_PAGE   => ['nullable', 'integer', 'min:1'],
+            self::LAST_NAME => ['nullable', 'string', new AlphaNumSpaces],
+            self::EMAIL => ['nullable', 'string', AlphaNumSpaces::withAllowedCharacters('@.-_')],
+            self::PAGE => ['nullable', 'integer', 'min:1'],
+            self::PER_PAGE => ['nullable', 'integer', 'min:1'],
         ];
     }
 
     public function toDto(): UsersIndexRequestDto
     {
         return new UsersIndexRequestDto(
-            status:       Statuses::tryFrom($this->string(self::STATUS)->toString()),
-            firstName:    $this->string(self::FIRST_NAME)->toString(),
-            lastName:     $this->string(self::LAST_NAME)->toString(),
-            email:        $this->string(self::EMAIL)->toString(),
+            status: Statuses::tryFrom($this->string(self::STATUS)->toString()),
+            firstName: $this->string(self::FIRST_NAME)->toString(),
+            lastName: $this->string(self::LAST_NAME)->toString(),
+            email: $this->string(self::EMAIL)->toString(),
             paginatorDto: new PaginatorDto(
                 perPage: $this->integer('perPage'),
-                page:    $this->integer('page'),
+                page: $this->integer('page'),
             )
         );
     }

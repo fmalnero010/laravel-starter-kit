@@ -7,33 +7,59 @@ namespace App\Transformers;
 use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
-use Illuminate\Http\Resources\Json\ResourceCollection;
 
+/**
+ * @template TResource of JsonResource
+ *
+ * @extends BaseResourceCollection<TResource>
+ */
 abstract class PaginatorResource extends BaseResourceCollection
 {
+    /**
+     * @return class-string<TResource>
+     */
     abstract protected function resourceClass(): string;
 
+    /**
+     * @return array<string, mixed>
+     */
     public function toArray(Request $request): array
     {
-        /** @var Paginator $paginator */
+        /** @var Paginator<TResource> $paginator */
         $paginator = $this->resource;
-        /** @var ResourceCollection|JsonResource $resourceClass */
+
+        /** @var class-string<TResource> $resourceClass */
         $resourceClass = $this->resourceClass();
 
+        /** @var mixed $collectionData */
+        $collectionData = $resourceClass::collection($this->collection)->toArray($request);
+
+        /** @var array<int, array<string, mixed>> $data */
+        $data = match (true) {
+            is_array($collectionData) => array_values($collectionData),
+            $collectionData instanceof \Traversable => array_values(iterator_to_array($collectionData)),
+            default => throw new \UnexpectedValueException('Expected collection to be iterable or array.'),
+        };
+
         return [
-            'data' => $resourceClass::collection($this->collection),
+            'data' => $data,
             'meta' => [
                 'current_page' => $paginator->currentPage(),
-                'per_page'     => $paginator->perPage(),
-                'from'         => $paginator->firstItem(),
-                'to'           => $paginator->lastItem(),
+                'per_page' => $paginator->perPage(),
+                'from' => $paginator->firstItem(),
+                'to' => $paginator->lastItem(),
             ],
             'links' => $this->transformLinks($paginator, $request),
         ];
     }
 
+    /**
+     * @param  Paginator<TResource>  $paginator
+     * @return array{first: string, prev: string|null, next: string|null}
+     */
     protected function transformLinks(Paginator $paginator, Request $request): array
     {
+        /** @var array<string, mixed> $query */
         $query = $request->except('page');
         $currentPage = $paginator->currentPage();
         $nextPageUrl = $paginator->nextPageUrl();
@@ -41,43 +67,30 @@ abstract class PaginatorResource extends BaseResourceCollection
 
         return [
             'first' => $this->replacePageParam($paginator->url(1), $query, 1),
-            'prev'  => $prevPageUrl
+            'prev' => $prevPageUrl
                 ? $this->replacePageParam($prevPageUrl, $query, $currentPage - 1)
                 : null,
-            'next'  => $nextPageUrl
+            'next' => $nextPageUrl
                 ? $this->replacePageParam($nextPageUrl, $query, $currentPage + 1)
                 : null,
         ];
     }
 
+    /**
+     * @param  array<string, mixed>  $query
+     */
     protected function replacePageParam(string $url, array $query, int $page): string
     {
-        // Remove 'page' and 'filter.page' to avoid conflicts
-        unset($query['page'], $query['filter.page']);
-
-        // Keep paginate[perPage] if it is in the request
-        $perPage = $query['paginate']['perPage'] ?? null;
-
-        // Overwrite paginate[page] with the correct value for the current page
-        $query['paginate']['page'] = $page;
-
-        // If paginate[perPage] was there before, add it again
-        if ($perPage !== null) {
-            $query['paginate']['perPage'] = $perPage;
+        if (! isset($query['paginate']) || ! is_array($query['paginate'])) {
+            $query['paginate'] = [];
         }
 
-        // Generate query without encoding the brackets
+        unset($query['page'], $query['filter.page']);
+        $query['paginate']['page'] = $page;
+
         $queryString = http_build_query($query, '', '&', PHP_QUERY_RFC3986);
+        $queryString = urldecode(str_replace(['%5B', '%5D'], ['[', ']'], $queryString));
 
-        // Replace brackets encoding
-        $queryString = str_replace(['%5B', '%5D'], ['[', ']'], $queryString);
-
-        // Decode special characters if any
-        $queryString = urldecode($queryString);
-
-        // Eliminate old pagination without dot-notation if exists
-        $url = preg_replace('/\?page=\d+/', '', $url);
-
-        return $url . '?' . $queryString;
+        return preg_replace('/\?page=\d+/', '', $url).'?'.$queryString;
     }
 }

@@ -11,6 +11,7 @@ use OpenApi\Annotations as OA;
  *     description="Internal Server Error",
  *     type="object",
  *     required={"message"},
+ *
  *     @OA\Property(
  *         property="status",
  *         type="integer",
@@ -28,6 +29,4 @@ use OpenApi\Annotations as OA;
  *     )
  * )
  */
-class ServerErrorSchema
-{
-}
+class ServerErrorSchema {}

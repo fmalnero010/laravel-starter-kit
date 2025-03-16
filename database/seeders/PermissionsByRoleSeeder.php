@@ -41,9 +41,10 @@ class PermissionsByRoleSeeder extends Seeder
      */
     private function getPermissionsForRole(string $roleName): array
     {
-        return collect($this->getPermissionsByRole()[$roleName] ?? [])
-            ->map(fn (Permissions $p): string => $p->value)
-            ->toArray();
+        return array_map(
+            fn (Permissions $p): string => $p->value,
+            $this->getPermissionsByRole()[$roleName] ?? []
+        );
     }
 
     /**
@@ -53,10 +54,10 @@ class PermissionsByRoleSeeder extends Seeder
     {
         return [
             Roles::SuperAdmin->value => Permissions::cases(),
-            Roles::Admin->value      => [
+            Roles::Admin->value => [
                 Permissions::UsersList,
             ],
-            Roles::User->value       => [],
+            Roles::User->value => [],
         ];
     }
 }
