@@ -20,8 +20,8 @@ jobs:
         env:
           MYSQL_DATABASE: laravel_starter_kit
           MYSQL_ROOT_PASSWORD: root
-          MYSQL_USER: root
-          MYSQL_PASSWORD: root
+          MYSQL_USER: test_user
+          MYSQL_PASSWORD: test_password
         ports:
           - 3306:3306
         options: --health-cmd="mysqladmin ping --host=localhost --user=root --password=root" --health-interval=10s --health-timeout=5s --health-retries=3
@@ -53,8 +53,8 @@ jobs:
           echo "DB_HOST=127.0.0.1" >> .env
           echo "DB_PORT=3306" >> .env
           echo "DB_DATABASE=laravel_starter_kit" >> .env
-          echo "DB_USERNAME=root" >> .env
-          echo "DB_PASSWORD=root" >> .env
+          echo "DB_USERNAME=test_user" >> .env
+          echo "DB_PASSWORD=test_password" >> .env
           echo "CACHE_DRIVER=redis" >> .env
           echo "SESSION_DRIVER=array" >> .env
           echo "QUEUE_CONNECTION=sync" >> .env
