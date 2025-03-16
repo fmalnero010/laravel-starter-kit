@@ -26,6 +26,11 @@ jobs:
           - 3306:3306
         options: --health-cmd="mysqladmin ping --host=localhost --user=root --password=root" --health-interval=10s --health-timeout=5s --health-retries=3
 
+      redis:
+        image: redis:alpine
+        ports:
+          - 6379:6379
+
     steps:
       - name: 🛠️ Clone the repository
         uses: actions/checkout@v3
@@ -53,11 +58,19 @@ jobs:
           echo "SESSION_DRIVER=array" >> .env
           echo "QUEUE_CONNECTION=sync" >> .env
 
+      - name: 🔄 Clear config cache
+        run: php artisan config:clear
+
       - name: 🔑 Generate application key
         run: php artisan key:generate
 
       - name: 🏗️ Run migrations for testing
         run: php artisan migrate --env=testing --force
+
+      - name: 🔄 Enable Redis for tests
+        run: |
+          echo "CACHE_DRIVER=redis" >> .env
+          php artisan config:clear
 
       - name: 🚀 Run Tests
         run: php artisan test
