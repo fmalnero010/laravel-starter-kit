@@ -1,0 +1,92 @@
+name: Laravel Tests
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+    branches:
+      - main
+      - develop
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_DATABASE: laravel_starter_kit
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_USER: test_user
+          MYSQL_PASSWORD: test_password
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping --host=localhost --user=root --password=root" --health-interval=10s --health-timeout=5s --health-retries=3
+
+      redis:
+        image: redis:alpine
+        ports:
+          - 6379:6379
+        options: --health-cmd "redis-server --daemonize yes && redis-cli ping" --health-interval 5s --health-timeout 5s --health-retries 10
+
+    steps:
+      - name: 🛠️ Clone the repository
+        uses: actions/checkout@v3
+
+      - name: 🏗️ Configure PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          extensions: mbstring, pdo, pdo_mysql
+          tools: composer:v2
+
+      - name: 📦 Install dependencies
+        run: composer install --optimize-autoloader
+
+      - name: 🗝️ Configure environment variables
+        run: |
+          cp .env.example .env
+          echo "DB_CONNECTION=mysql" >> .env
+          echo "DB_HOST=127.0.0.1" >> .env
+          echo "DB_PORT=3306" >> .env
+          echo "DB_DATABASE=laravel_starter_kit" >> .env
+          echo "DB_USERNAME=test_user" >> .env
+          echo "DB_PASSWORD=test_password" >> .env
+          echo "CACHE_DRIVER=redis" >> .env
+          echo "SESSION_DRIVER=array" >> .env
+          echo "QUEUE_CONNECTION=sync" >> .env
+          echo "REDIS_HOST=localhost" >> .env  # 🔥 Laravel se conecta a Redis en localhost
+          echo "REDIS_PORT=6379" >> .env
+
+      - name: 🔄 Clear config cache
+        run: php artisan config:clear
+
+      - name: 🔑 Generate application key
+        run: php artisan key:generate
+
+      - name: 🔍 Debug Redis Logs (Opcional, para ver errores)
+        run: docker logs $(docker ps -q --filter "ancestor=redis:alpine") || echo "No Redis logs found"
+
+      - name: 🏗️ Wait for Redis to be ready
+        run: |
+          echo "Waiting for Redis to be ready..."
+          REDIS_CONTAINER=$(docker ps --format '{{.Names}}' --filter "ancestor=redis:alpine")
+          for i in {1..30}; do
+            if docker exec $REDIS_CONTAINER redis-cli ping | grep -q PONG; then
+              echo "Redis is up!"
+              exit 0
+            fi
+            echo "Waiting for Redis... attempt $i"
+            sleep 2
+          done
+          echo "Redis did not start in time"
+          exit 1
+
+      - name: 🏗️ Run migrations for testing
+        run: php artisan migrate --env=testing --force
+
+      - name: 🚀 Run Tests
+        run: vendor/bin/pest
