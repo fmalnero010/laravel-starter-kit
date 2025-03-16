@@ -1,0 +1,60 @@
+name: Laravel Tests
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+    branches:
+      - main
+      - develop
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_DATABASE: testing_db
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_USER: test_user
+          MYSQL_PASSWORD: test_password
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping --host=localhost --user=root --password=root" --health-interval=10s --health-timeout=5s --health-retries=3
+
+    steps:
+      - name: 🛠️ Clon the repository
+        uses: actions/checkout@v3
+
+      - name: 🏗️ Configure PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          extensions: mbstring, pdo, pdo_mysql
+          tools: composer:v2
+
+      - name: 📦 Install dependencies
+        run: composer install --no-dev --optimize-autoloader
+
+      - name: 🗝️ Configure environment variables
+        run: |
+          cp .env.testing .env
+          echo "DB_CONNECTION=mysql" >> .env
+          echo "DB_HOST=127.0.0.1" >> .env
+          echo "DB_PORT=3306" >> .env
+          echo "DB_DATABASE=testing_db" >> .env
+          echo "DB_USERNAME=test_user" >> .env
+          echo "DB_PASSWORD=test_password" >> .env
+
+      - name: 🔑 Generate application key
+        run: php artisan key:generate
+
+      - name: 🏗️ Run migrations for testing
+        run: php artisan migrate --env=testing --force
+
+      - name: 🚀 Ejecutar Tests
+        run: php artisan test
