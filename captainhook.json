@@ -21,7 +21,7 @@
             { "action": "\\CaptainHook\\App\\Hook\\Composer\\Action\\CheckLockFile", "options": [] },
             { "action": "vendor/bin/phpstan --memory-limit=2g", "options": [] },
             { "action": "vendor/bin/ecs --fix", "options": [] },
-            { "action": "vendor/bin/sail php artisan test"}
+            { "action": "vendor/bin/sail artisan test"}
         ]
     }
 }
