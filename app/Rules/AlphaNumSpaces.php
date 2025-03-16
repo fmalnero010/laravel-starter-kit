@@ -14,6 +14,7 @@ class AlphaNumSpaces implements ValidationRule
     {
         if (! is_string($value)) {
             $fail('The :attribute must be a string.');
+
             return;
         }
 
@@ -37,6 +38,7 @@ class AlphaNumSpaces implements ValidationRule
     {
         $class = new self;
         $class->extraChars = $chars;
+
         return $class;
     }
 
@@ -44,6 +46,7 @@ class AlphaNumSpaces implements ValidationRule
     {
         $class = new self;
         $class->allowNumbers = false;
+
         return $class;
     }
 }

@@ -3,7 +3,6 @@
 use App\Models\User;
 use Database\Factories\UserFactory;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-use Illuminate\Http\Response;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Modules\Users\Enums\Statuses;
