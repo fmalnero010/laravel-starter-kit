@@ -30,17 +30,17 @@ class UsersIndexRequest extends APIRequest implements DataTransferableRequest
     {
         $this->removeExactDuplicateInputs();
         $this->removeConflictingKeys($this->listFilterParametersKeys());
-        $this->extractDotNotationFor('filter');
+        $this->extractArrayNotationFor('filter');
         $this->removeConflictingKeys($this->listPaginateParametersKeys());
-        $this->extractDotNotationFor('paginate');
+        $this->extractArrayNotationFor('paginate');
     }
 
     public function rules(): array
     {
         return [
             self::STATUS => ['nullable', new Enum(Statuses::class)],
-            self::FIRST_NAME => ['nullable', 'string', new AlphaNumSpaces],
-            self::LAST_NAME => ['nullable', 'string', new AlphaNumSpaces],
+            self::FIRST_NAME => ['nullable', 'string', AlphaNumSpaces::withoutNumbers()],
+            self::LAST_NAME => ['nullable', 'string', AlphaNumSpaces::withoutNumbers()],
             self::EMAIL => ['nullable', 'string', AlphaNumSpaces::withAllowedCharacters('@.-_')],
             self::PAGE => ['nullable', 'integer', 'min:1'],
             self::PER_PAGE => ['nullable', 'integer', 'min:1'],
