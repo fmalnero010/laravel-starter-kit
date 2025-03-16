@@ -19,8 +19,8 @@
         "enabled": true,
         "actions": [
             { "action": "\\CaptainHook\\App\\Hook\\Composer\\Action\\CheckLockFile", "options": [] },
-            { "action": "composer run-script phpstan", "options": [] },
-            { "action": "composer run-script ecs", "options": [] },
+            { "action": "vendor/bin/phpstan", "options": [] },
+            { "action": "vendor/bin/ecs --fix", "options": [] },
             { "action": "vendor/bin/sail composer test"}
         ]
     }
