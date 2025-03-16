@@ -29,7 +29,7 @@ test('should return a list of users', function () {
                 'data' => [
                     '*' => $expectedUserCamelKeys,
                 ],
-                'metasis' => [
+                'meta' => [
                     'current_page',
                     'from',
                     'per_page',
