@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Builders\UserBuilder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -27,7 +26,6 @@ use Spatie\Permission\Traits\HasRoles;
  */
 class User extends Authenticatable
 {
-    use HasFactory;
     use Notifiable;
     use SoftDeletes;
     use HasApiTokens;
@@ -64,10 +62,13 @@ class User extends Authenticatable
         return 'api';
     }
 
+    /**
+     * @return Attribute<Statuses, string>
+     */
     public function status(): Attribute
     {
-        return new Attribute(
-            get: fn (string $status): Statuses => Statuses::from($status),
+        return Attribute::make(
+            get: fn (string $status, array $attributes): Statuses => Statuses::from($status),
             set: fn (Statuses $status): string => $status->value,
         );
     }

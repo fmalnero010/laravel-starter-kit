@@ -12,6 +12,11 @@ class AlphaNumSpaces implements ValidationRule
 
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
+        if (!is_string($value)) {
+            $fail('The :attribute must be a string.');
+            return;
+        }
+
         $pattern = '/^[a-zA-Z0-9 ' . preg_quote($this->extraChars, '/') . ']+$/';
 
         if (preg_match($pattern, $value)) {

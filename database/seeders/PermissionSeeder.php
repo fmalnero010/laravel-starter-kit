@@ -28,12 +28,12 @@ class PermissionSeeder extends Seeder
      */
     private function getPermissionsArray(): array
     {
-        return collect(Permissions::cases())
-            ->map(
-                fn (Permissions $permission): array => [
-                    'name'       => $permission->value,
-                    'guard_name' => 'api',
-                ]
-            )->toArray();
+        return array_map(
+            fn (Permissions $permission): array => [
+                'name'       => $permission->value,
+                'guard_name' => 'api',
+            ],
+            Permissions::cases()
+        );
     }
 }
