@@ -30,6 +30,7 @@
         "pestphp/pest": "^3.7",
         "phpstan/extension-installer": "^1.4",
         "phpstan/phpstan": "^2.1",
+        "ramsey/conventional-commits": "^1.6",
         "symplify/easy-coding-standard": "^12.5"
     },
     "autoload": {

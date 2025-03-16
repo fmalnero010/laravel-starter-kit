@@ -36,9 +36,9 @@ class APIRequest extends FormRequest
     }
 
     /**
-     * Extracts values from a dot notation array and merges them into the main request
+     * Extracts values from a array notation array and merges them into the main request
      */
-    public function extractDotNotationFor(string $key): void
+    public function extractArrayNotationFor(string $key): void
     {
         $conditions = $this->input($key, []);
         $this->merge($conditions);
