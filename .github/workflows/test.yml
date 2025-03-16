@@ -27,13 +27,13 @@ jobs:
         options: --health-cmd="mysqladmin ping --host=localhost --user=root --password=root" --health-interval=10s --health-timeout=5s --health-retries=3
 
     steps:
-      - name: 🛠️ Clon the repository
+      - name: 🛠️ Clone the repository
         uses: actions/checkout@v3
 
       - name: 🏗️ Configure PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.4'
+          php-version: '8.2'
           extensions: mbstring, pdo, pdo_mysql
           tools: composer:v2
 
@@ -42,13 +42,16 @@ jobs:
 
       - name: 🗝️ Configure environment variables
         run: |
-          cp .env.example .env
+          cp .env.testing .env
           echo "DB_CONNECTION=mysql" >> .env
           echo "DB_HOST=127.0.0.1" >> .env
           echo "DB_PORT=3306" >> .env
           echo "DB_DATABASE=testing_db" >> .env
           echo "DB_USERNAME=test_user" >> .env
           echo "DB_PASSWORD=test_password" >> .env
+          echo "CACHE_DRIVER=array" >> .env
+          echo "SESSION_DRIVER=array" >> .env
+          echo "QUEUE_CONNECTION=sync" >> .env
 
       - name: 🔑 Generate application key
         run: php artisan key:generate
@@ -56,5 +59,5 @@ jobs:
       - name: 🏗️ Run migrations for testing
         run: php artisan migrate --env=testing --force
 
-      - name: 🚀 Ejecutar Tests
+      - name: 🚀 Run Tests
         run: php artisan test
