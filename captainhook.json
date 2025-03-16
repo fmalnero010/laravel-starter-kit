@@ -19,7 +19,7 @@
         "enabled": true,
         "actions": [
             { "action": "\\CaptainHook\\App\\Hook\\Composer\\Action\\CheckLockFile", "options": [] },
-            { "action": "vendor/bin/phpstan --memory=2g", "options": [] },
+            { "action": "vendor/bin/phpstan --memory-limit 2g", "options": [] },
             { "action": "vendor/bin/ecs --fix", "options": [] },
             { "action": "vendor/bin/sail composer test"}
         ]
