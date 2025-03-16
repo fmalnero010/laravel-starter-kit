@@ -58,7 +58,7 @@ jobs:
           echo "CACHE_DRIVER=redis" >> .env
           echo "SESSION_DRIVER=array" >> .env
           echo "QUEUE_CONNECTION=sync" >> .env
-          echo "REDIS_HOST=127.0.0.1" >> .env
+          echo "REDIS_HOST=localhost" >> .env  # 🔥 Laravel se conecta a Redis en localhost
           echo "REDIS_PORT=6379" >> .env
 
       - name: 🔄 Clear config cache
@@ -68,13 +68,14 @@ jobs:
         run: php artisan key:generate
 
       - name: 🔍 Debug Redis Logs (Opcional, para ver errores)
-        run: docker logs $(docker ps -q --filter "ancestor=redis:alpine")
+        run: docker logs $(docker ps -q --filter "ancestor=redis:alpine") || echo "No Redis logs found"
 
       - name: 🏗️ Wait for Redis to be ready
         run: |
           echo "Waiting for Redis to be ready..."
+          REDIS_CONTAINER=$(docker ps --format '{{.Names}}' --filter "ancestor=redis:alpine")
           for i in {1..30}; do
-            if redis-cli -h 127.0.0.1 -p 6379 ping | grep -q PONG; then
+            if docker exec $REDIS_CONTAINER redis-cli ping | grep -q PONG; then
               echo "Redis is up!"
               exit 0
             fi
