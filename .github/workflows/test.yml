@@ -42,7 +42,7 @@ jobs:
 
       - name: 🗝️ Configure environment variables
         run: |
-          cp .env.testing .env
+          cp .env.example .env
           echo "DB_CONNECTION=mysql" >> .env
           echo "DB_HOST=127.0.0.1" >> .env
           echo "DB_PORT=3306" >> .env
