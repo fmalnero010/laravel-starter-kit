@@ -69,11 +69,11 @@ jobs:
 
       - name: 🏗️ Wait for Redis to be ready
         run: |
-          until redis-cli -h redis ping | grep -q PONG; do
-            echo "Waiting for Redis..."
-            sleep 2
+          echo "Waiting for Redis to be ready..."
+          while ! nc -z redis 6379; do
+            sleep 1
           done
-          echo "Redis is ready!"
+          echo "Redis is up!"
 
       - name: 🏗️ Run migrations for testing
         run: php artisan migrate --env=testing --force
