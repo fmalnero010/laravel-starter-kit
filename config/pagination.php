@@ -2,5 +2,5 @@
 
 return [
     'per_page' => 15,
-    'page'     => 1,
+    'page' => 1,
 ];

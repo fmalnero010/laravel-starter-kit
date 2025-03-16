@@ -11,6 +11,7 @@ use OpenApi\Annotations as OA;
  *     description="One or more fields have an error.",
  *     type="object",
  *     required={"message"},
+ *
  *     @OA\Property(
  *         property="status",
  *         type="integer",
@@ -27,6 +28,7 @@ use OpenApi\Annotations as OA;
  *         @OA\Property(
  *             property="field",
  *             type="array",
+ *
  *             @OA\Items(
  *                 type="string",
  *                 example="The :field field is required."
@@ -35,6 +37,4 @@ use OpenApi\Annotations as OA;
  *     )
  * )
  */
-class ValidationErrorSchema
-{
-}
+class ValidationErrorSchema {}

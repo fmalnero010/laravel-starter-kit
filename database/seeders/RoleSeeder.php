@@ -30,7 +30,7 @@ class RoleSeeder extends Seeder
     {
         return array_map(
             fn (Roles $role): array => [
-                'name'       => $role->value,
+                'name' => $role->value,
                 'guard_name' => 'api',
             ],
             Roles::cases()

@@ -27,7 +27,7 @@ test('should return a list of users', function () {
             'message',
             'data' => [
                 'data' => [
-                    '*' => $expectedUserCamelKeys
+                    '*' => $expectedUserCamelKeys,
                 ],
                 'meta' => [
                     'current_page',
@@ -39,7 +39,7 @@ test('should return a list of users', function () {
                     'first',
                     'prev',
                     'next',
-                ]
-            ]
+                ],
+            ],
         ]);
 });

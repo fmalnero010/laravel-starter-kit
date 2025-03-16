@@ -13,9 +13,7 @@ use Modules\Users\Enums\Statuses;
 
 class UserSeeder extends Seeder
 {
-    public function __construct(private readonly UserFactory $factory)
-    {
-    }
+    public function __construct(private readonly UserFactory $factory) {}
 
     public function run(): void
     {
@@ -59,7 +57,7 @@ class UserSeeder extends Seeder
             ->create();
     }
 
-    private function seedSoftDeletedUsers(int $quantity, Carbon|null $date = null): void
+    private function seedSoftDeletedUsers(int $quantity, ?Carbon $date = null): void
     {
         $this->factory
             ->count($quantity)
@@ -67,7 +65,7 @@ class UserSeeder extends Seeder
             ->create();
     }
 
-    private function seedUsersWithStatus(int $quantity, Statuses|null $status = null): void
+    private function seedUsersWithStatus(int $quantity, ?Statuses $status = null): void
     {
         $this->factory
             ->count($quantity)

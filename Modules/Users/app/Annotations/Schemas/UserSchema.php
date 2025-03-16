@@ -11,6 +11,7 @@ use OpenApi\Annotations as OA;
  *     description="User model representation",
  *     type="object",
  *     required={"id", "status", "firstName", "lastName", "email"},
+ *
  *     @OA\Property(property="id", type="integer", example=1),
  *     @OA\Property(property="status", type="string", enum={"A", "P", "I"}, example="A"),
  *     @OA\Property(property="firstName", type="string", example="Facundo"),
@@ -18,6 +19,4 @@ use OpenApi\Annotations as OA;
  *     @OA\Property(property="email", type="string", format="email", example="facundomalnero010@gmail.com")
  * )
  */
-class UserSchema
-{
-}
+class UserSchema {}

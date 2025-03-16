@@ -14,9 +14,11 @@ use OpenApi\Annotations as OA;
  *      },
  *      title="Laravel-Starter-Kit",
  *      description="A Laravel-Starter-Kit for building scalable and optimal applications",
+ *
  *      @OA\Contact(
  *          email="facundomalnero010@gmail.com"
  *      ),
+ *
  *     @OA\License(
  *         name="Apache 2.0",
  *         url="https://www.apache.org/licenses/LICENSE-2.0.html"

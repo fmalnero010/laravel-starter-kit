@@ -7,10 +7,10 @@ namespace App\Transformers;
 use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
-use Illuminate\Http\Resources\Json\ResourceCollection;
 
 /**
  * @template TResource of JsonResource
+ *
  * @extends BaseResourceCollection<TResource>
  */
 abstract class PaginatorResource extends BaseResourceCollection
@@ -45,16 +45,16 @@ abstract class PaginatorResource extends BaseResourceCollection
             'data' => $data,
             'meta' => [
                 'current_page' => $paginator->currentPage(),
-                'per_page'     => $paginator->perPage(),
-                'from'         => $paginator->firstItem(),
-                'to'           => $paginator->lastItem(),
+                'per_page' => $paginator->perPage(),
+                'from' => $paginator->firstItem(),
+                'to' => $paginator->lastItem(),
             ],
             'links' => $this->transformLinks($paginator, $request),
         ];
     }
 
     /**
-     * @param Paginator<TResource> $paginator
+     * @param  Paginator<TResource>  $paginator
      * @return array{first: string, prev: string|null, next: string|null}
      */
     protected function transformLinks(Paginator $paginator, Request $request): array
@@ -67,21 +67,21 @@ abstract class PaginatorResource extends BaseResourceCollection
 
         return [
             'first' => $this->replacePageParam($paginator->url(1), $query, 1),
-            'prev'  => $prevPageUrl
+            'prev' => $prevPageUrl
                 ? $this->replacePageParam($prevPageUrl, $query, $currentPage - 1)
                 : null,
-            'next'  => $nextPageUrl
+            'next' => $nextPageUrl
                 ? $this->replacePageParam($nextPageUrl, $query, $currentPage + 1)
                 : null,
         ];
     }
 
     /**
-     * @param array<string, mixed> $query
+     * @param  array<string, mixed>  $query
      */
     protected function replacePageParam(string $url, array $query, int $page): string
     {
-        if (!isset($query['paginate']) || !is_array($query['paginate'])) {
+        if (! isset($query['paginate']) || ! is_array($query['paginate'])) {
             $query['paginate'] = [];
         }
 
@@ -91,6 +91,6 @@ abstract class PaginatorResource extends BaseResourceCollection
         $queryString = http_build_query($query, '', '&', PHP_QUERY_RFC3986);
         $queryString = urldecode(str_replace(['%5B', '%5D'], ['[', ']'], $queryString));
 
-        return preg_replace('/\?page=\d+/', '', $url) . '?' . $queryString;
+        return preg_replace('/\?page=\d+/', '', $url).'?'.$queryString;
     }
 }

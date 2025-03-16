@@ -12,8 +12,7 @@ class UsersIndexController
     public function __invoke(
         UsersIndexRequest $usersIndexRequest,
         UsersIndexAction $usersIndexAction,
-    ): JsonResponse
-    {
+    ): JsonResponse {
         $users = $usersIndexAction->execute($usersIndexRequest->toDto());
 
         return response()->success(

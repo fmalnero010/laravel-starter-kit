@@ -18,6 +18,7 @@ Un **Starter Kit** de Laravel **altamente optimizado y escalable**, diseñado pa
 - **Mailpit** para pruebas de emails en dev
 - **Telescope** para debugging avanzado
 - **Laravel Cloud** para despliegue en producción
+- **CaptainHook** para hooks de Git automáticos
 
 ---
 
@@ -67,19 +68,50 @@ sail test Modules/Users/tests/Feature/UsersIndexTest.php
 
 ## 🛠️ Herramientas Integradas
 
-🔹 Telescope - Debugging Avanzado
+🔹 **CaptainHook** - **Hooks de Git Automáticos**
+
+Este proyecto utiliza **CaptainHook** para ejecutar acciones automáticas durante el flujo de trabajo con Git, como la validación de mensajes de commit, el formateo de código y la ejecución de pruebas antes de hacer commit o push. Estas herramientas ayudan a mantener el código limpio y evitar errores comunes.
+
+### **Configuración de CaptainHook**
+
+1. **Instalación de dependencias**  
+   Para instalar **CaptainHook**, solo necesitas ejecutar el siguiente comando, que ya estará incluido en el proceso de instalación cuando clonas el repositorio y corres `composer install`:
+
+   ```bash
+   sail composer install
+   ```
+
+2. **Instalación de los hooks de Git**  
+   Los hooks de Git se instalarán automáticamente cuando corras el siguiente comando (esto debería hacerse después de cada `composer install`):
+
+   ```bash
+   vendor/bin/captainhook install --force
+   ```
+
+3. **Acciones de los hooks**  
+   Los hooks configurados son:
+    - **`pre-commit`**: Formatea el código con **ECS**.
+    - **`pre-push`**: Ejecuta los tests con **Pest**, verifica que no haya errores con **PHPStan** y previene el push a las ramas `main` y `develop`.
+
+4. **Uso de CaptainHook**  
+   Si alguna de las validaciones falla, el commit o push será rechazado hasta que se solucionen los problemas. Por ejemplo:
+    - **Pre-push fallido**: Si los tests o PHPStan fallan.
+
+---
+
+🔹 **Telescope - Debugging Avanzado**
 
 Telescope es una herramienta poderosa para inspeccionar logs, requests, queries y excepciones en tiempo real. Para acceder a la interfaz de Telescope:
 
 http://localhost/telescope
 
-🔹 Redis - Caching y Optimización
+🔹 **Redis - Caching y Optimización**
 
 Redis se usa para caching de consultas, sesiones y optimización de respuestas. Laravel ya está configurado para usar Redis como CACHE_DRIVER. Para conectarte a Redis dentro del contenedor:
 
 http://localhost:5540
 
-🔹 Mailpit - Testing de Correos
+🔹 **Mailpit - Testing de Correos**
 
 Mailpit es una herramienta que captura correos enviados en el entorno de desarrollo, permitiendo visualizar y depurar emails sin enviarlos realmente. Para acceder a la interfaz de Mailpit:
 
@@ -88,7 +120,7 @@ http://localhost:8025
 ---
 
 ## 📄 **Swagger - Documentación de API**
-La documentación se genera automáticamente con **Swagger**. 
+La documentación se genera automáticamente con **Swagger**.
 Sin embargo, también puedes generarla con el siguiente comando:
 ```bash
 sail artisan l5-swagger:generate
@@ -105,3 +137,4 @@ Accedé en: **[http://localhost/api/documentation](http://localhost/api/document
 
 🚀 **Hecho con Laravel & ❤️ por [Facundo Malnero]** 🚀
 
+---

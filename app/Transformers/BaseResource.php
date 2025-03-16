@@ -26,14 +26,14 @@ abstract class BaseResource extends JsonResource
         $data = parent::resolve($request);
 
         return match (true) {
-            !empty($this->only) => array_intersect_key($data, array_flip($this->only)),
-            !empty($this->except) => array_diff_key($data, array_flip($this->except)),
+            ! empty($this->only) => array_intersect_key($data, array_flip($this->only)),
+            ! empty($this->except) => array_diff_key($data, array_flip($this->except)),
             default => $data,
         };
     }
 
     /**
-     * @param mixed $resource
+     * @param  mixed  $resource
      * @return BaseResourceCollection<TResource>
      */
     public static function collection($resource): BaseResourceCollection
@@ -48,22 +48,24 @@ abstract class BaseResource extends JsonResource
     }
 
     /**
-     * @param array<string> $keys
+     * @param  array<string> $keys
      * @return static
      */
     public function except(array $keys): static
     {
         $this->except = $keys;
+
         return $this;
     }
 
     /**
-     * @param array<string> $keys
+     * @param  array<string> $keys
      * @return static
      */
     public function only(array $keys): static
     {
         $this->only = $keys;
+
         return $this;
     }
 }

@@ -19,6 +19,7 @@
         "spatie/laravel-permission": "^6.16"
     },
     "require-dev": {
+        "captainhook/captainhook": "^5.25",
         "fakerphp/faker": "^1.23",
         "laravel/pail": "^1.2.2",
         "laravel/pint": "^1.13",
@@ -28,7 +29,8 @@
         "nunomaduro/larastan": "^3.2",
         "pestphp/pest": "^3.7",
         "phpstan/extension-installer": "^1.4",
-        "phpstan/phpstan": "^2.1"
+        "phpstan/phpstan": "^2.1",
+        "symplify/easy-coding-standard": "^12.5"
     },
     "autoload": {
         "psr-4": {

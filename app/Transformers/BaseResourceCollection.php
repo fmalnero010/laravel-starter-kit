@@ -25,13 +25,13 @@ abstract class BaseResourceCollection extends ResourceCollection
     {
         /** @var array<int, array<string, mixed>>|array<string, mixed> $result */
         $result = $this->collection->map(function (mixed $resource) use ($request): array {
-            if (is_object($resource) && !method_exists($resource, 'resolve')) {
+            if (is_object($resource) && ! method_exists($resource, 'resolve')) {
                 /** @var class-string<TResource> $collects */
                 $collects = $this->collects;
                 $resource = new $collects($resource);
             }
 
-            if (!is_object($resource) || !method_exists($resource, 'resolve')) {
+            if (! is_object($resource) || ! method_exists($resource, 'resolve')) {
                 throw new \LogicException('Resource must be an object with a resolve method.');
             }
 
@@ -39,8 +39,8 @@ abstract class BaseResourceCollection extends ResourceCollection
             $data = $resource->resolve($request);
 
             return match (true) {
-                !empty($this->only) => array_intersect_key($data, array_flip($this->only)),
-                !empty($this->except) => array_diff_key($data, array_flip($this->except)),
+                ! empty($this->only) => array_intersect_key($data, array_flip($this->only)),
+                ! empty($this->except) => array_diff_key($data, array_flip($this->except)),
                 default => $data,
             };
         })->toArray();
@@ -49,22 +49,24 @@ abstract class BaseResourceCollection extends ResourceCollection
     }
 
     /**
-     * @param array<string> $keys
+     * @param  array<string> $keys
      * @return static
      */
     public function except(array $keys): static
     {
         $this->except = $keys;
+
         return $this;
     }
 
     /**
-     * @param array<string> $keys
+     * @param  array<string> $keys
      * @return static
      */
     public function only(array $keys): static
     {
         $this->only = $keys;
+
         return $this;
     }
 }

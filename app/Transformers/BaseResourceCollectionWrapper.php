@@ -6,6 +6,7 @@ namespace App\Transformers;
 
 /**
  * @template TResource of BaseResource
+ *
  * @extends BaseResourceCollection<TResource>
  */
 class BaseResourceCollectionWrapper extends BaseResourceCollection
@@ -14,8 +15,8 @@ class BaseResourceCollectionWrapper extends BaseResourceCollection
     public $collects;
 
     /**
-     * @param mixed $resource
-     * @param class-string<TResource> $resourceClass
+     * @param  mixed  $resource
+     * @param  class-string<TResource>  $resourceClass
      */
     public function __construct($resource, string $resourceClass)
     {
