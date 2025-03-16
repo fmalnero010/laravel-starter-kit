@@ -44,7 +44,7 @@ jobs:
           tools: composer:v2
 
       - name: 📦 Install dependencies
-        run: composer install --no-dev --optimize-autoloader
+        run: composer install --optimize-autoloader
 
       - name: 🗝️ Configure environment variables
         run: |
@@ -89,4 +89,4 @@ jobs:
         run: php artisan migrate --env=testing --force
 
       - name: 🚀 Run Tests
-        run: php artisan test
+        run: vendor/bin/pest --parallel
