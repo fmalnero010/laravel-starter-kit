@@ -6,42 +6,52 @@ namespace App\Transformers;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
+/**
+ * @template TResource of BaseResource
+ */
 abstract class BaseResource extends JsonResource
 {
+    /** @var array<string> */
     private array $except = [];
+
+    /** @var array<string> */
     private array $only = [];
 
+    /**
+     * @return array<string, mixed>
+     */
     public function resolve($request = null): array
     {
+        /** @var array<string, mixed> $data */
         $data = parent::resolve($request);
 
         return match (true) {
-            filled($this->only)   => array_intersect_key($data, array_flip($this->only)),
-            filled($this->except) => array_diff_key($data, array_flip($this->except)),
-            default               => $data,
-        };
-    }
-
-    public static function collection($resource): BaseResourceCollection
-    {
-        $resourceClass = static::class;
-
-        return new class($resource, $resourceClass) extends BaseResourceCollection {
-            public $collects;
-
-            public function __construct($resource, $resourceClass)
-            {
-                parent::__construct($resource);
-                $this->collects = $resourceClass;
-            }
+            !empty($this->only) => array_intersect_key($data, array_flip($this->only)),
+            !empty($this->except) => array_diff_key($data, array_flip($this->except)),
+            default => $data,
         };
     }
 
     /**
-     * @param array<string> $keys
-     * @return self
+     * @param mixed $resource
+     * @return BaseResourceCollection<TResource>
      */
-    public function except(array $keys): self
+    public static function collection($resource): BaseResourceCollection
+    {
+        /** @var class-string<static> $resourceClass */
+        $resourceClass = static::class;
+
+        /** @var BaseResourceCollection<TResource> $collection */
+        $collection = new BaseResourceCollectionWrapper($resource, $resourceClass);
+
+        return $collection;
+    }
+
+    /**
+     * @param array<string> $keys
+     * @return static
+     */
+    public function except(array $keys): static
     {
         $this->except = $keys;
         return $this;
@@ -49,9 +59,9 @@ abstract class BaseResource extends JsonResource
 
     /**
      * @param array<string> $keys
-     * @return self
+     * @return static
      */
-    public function only(array $keys): self
+    public function only(array $keys): static
     {
         $this->only = $keys;
         return $this;
