@@ -51,6 +51,7 @@ describe('Auth Login', function (): void {
                 ]
             ]);
 
+        /** @var TestCase $this */
         $this->assertDatabaseHas('personal_access_tokens', [
             'tokenable_id' => $user->id,
             'name' => 'authToken',
@@ -65,6 +66,7 @@ describe('Auth Login', function (): void {
         $user = UserFactory::new()->createOne();
         Auth::login($user);
 
+        /** @var TestCase $this */
         $response = $this->postJson(
             $endpoint,
             [
@@ -73,6 +75,7 @@ describe('Auth Login', function (): void {
             ]
         );
 
+        /** @var TestCase $this */
         $this->assertDatabaseHas('personal_access_tokens', [
             'tokenable_id' => $user->id,
             'name' => 'authToken',
