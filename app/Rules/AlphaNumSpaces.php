@@ -49,4 +49,20 @@ class AlphaNumSpaces implements ValidationRule
 
         return $class;
     }
+
+    public static function forEmail(): self
+    {
+        $class = new self;
+        $class->extraChars = '@.-_';
+
+        return $class;
+    }
+
+    public static function forPassword(): self
+    {
+        $class = new self;
+        $class->extraChars = '!@#$%^()_+-|:?';
+
+        return $class;
+    }
 }

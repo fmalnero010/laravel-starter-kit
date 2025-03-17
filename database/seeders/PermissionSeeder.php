@@ -31,7 +31,7 @@ class PermissionSeeder extends Seeder
         return array_map(
             fn (Permissions $permission): array => [
                 'name' => $permission->value,
-                'guard_name' => 'api',
+                'guard_name' => 'web',
             ],
             Permissions::cases()
         );

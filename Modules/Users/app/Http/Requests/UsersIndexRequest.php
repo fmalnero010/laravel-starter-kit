@@ -41,7 +41,7 @@ class UsersIndexRequest extends APIRequest implements DataTransferableRequest
             self::STATUS => ['nullable', new Enum(Statuses::class)],
             self::FIRST_NAME => ['nullable', 'string', AlphaNumSpaces::withoutNumbers()],
             self::LAST_NAME => ['nullable', 'string', AlphaNumSpaces::withoutNumbers()],
-            self::EMAIL => ['nullable', 'string', AlphaNumSpaces::withAllowedCharacters('@.-_')],
+            self::EMAIL => ['nullable', 'string', AlphaNumSpaces::forEmail()],
             self::PAGE => ['nullable', 'integer', 'min:1'],
             self::PER_PAGE => ['nullable', 'integer', 'min:1'],
         ];
