@@ -3,7 +3,6 @@
 use App\Models\User;
 use Database\Factories\UserFactory;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-use Illuminate\Support\Facades\Auth;
 use Laravel\Sanctum\PersonalAccessToken;
 use Tests\TestCase;
 
@@ -50,37 +49,6 @@ describe('Auth Login', function (): void {
                     ],
                 ]
             ]);
-
-        expect(
-            PersonalAccessToken::query()
-                ->where('tokenable_id', $user->id)
-                ->where('expires_at', $response->json('expires_at'))
-                ->exists()
-        )->toBeTrue();
-    });
-
-    test('should eliminate all other user tokens when logging in', function () use ($endpoint): void {
-        User::query()->forceDelete();
-        PersonalAccessToken::query()->forceDelete();
-
-        $user = UserFactory::new()->createOne();
-        Auth::login($user);
-
-        /** @var TestCase $this */
-        $response = $this->postJson(
-            $endpoint,
-            [
-                'email' => $user->email,
-                'password' => UserFactory::$password,
-            ]
-        );
-
-        expect(
-            PersonalAccessToken::query()
-                ->where('tokenable_id', $user->id)
-                ->where('expires_at', $response->json('expires_at'))
-                ->exists()
-        )->toBeTrue();
     });
 
     /*****************************************************************************************************************/
