@@ -16,6 +16,108 @@
         }
     },
     "paths": {
+        "/api/auth/login": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Login",
+                "description": "Logs a user in",
+                "operationId": "auth-login",
+                "parameters": [
+                    {
+                        "name": "email",
+                        "in": "query",
+                        "description": "User's email",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "password",
+                        "in": "query",
+                        "description": "User's password",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Paginated list of users",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "SUCCESS"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "accessToken": {
+                                                    "type": "string",
+                                                    "example": "4|6tF1Qc3fTAZPmPyDTZgqMSr55PHhm311zeGCs1IN6b596bb4"
+                                                },
+                                                "tokenType": {
+                                                    "type": "string",
+                                                    "example": "Bearer"
+                                                },
+                                                "expiresAt": {
+                                                    "type": "string",
+                                                    "example": "2025-09-08 14:00:00"
+                                                },
+                                                "user": {
+                                                    "$ref": "#/components/schemas/user"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/unauthenticated"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/validation-error"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/server-error"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/api/users": {
             "get": {
                 "tags": [
@@ -267,6 +369,28 @@
                 },
                 "type": "object"
             },
+            "unauthenticated": {
+                "title": "Unauthenticated",
+                "description": "You are not logged in.",
+                "required": [
+                    "message"
+                ],
+                "properties": {
+                    "status": {
+                        "type": "integer",
+                        "example": -1
+                    },
+                    "message": {
+                        "type": "string",
+                        "example": "ERROR"
+                    },
+                    "error": {
+                        "type": "string",
+                        "example": "You are not logged in."
+                    }
+                },
+                "type": "object"
+            },
             "unauthorized": {
                 "title": "Forbidden",
                 "description": "You don't have permission to access this resource.",
@@ -322,6 +446,10 @@
         }
     },
     "tags": [
+        {
+            "name": "Auth",
+            "description": "Auth"
+        },
         {
             "name": "Users",
             "description": "Users"
