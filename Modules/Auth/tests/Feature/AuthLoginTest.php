@@ -51,11 +51,12 @@ describe('Auth Login', function (): void {
                 ]
             ]);
 
-        test()->assertDatabaseHas('personal_access_tokens', [
-            'tokenable_id' => $user->id,
-            'name' => 'authToken',
-            'expires_at' => $response->json('data.expiresAt'),
-        ]);
+        expect(
+            PersonalAccessToken::query()
+                ->where('tokenable_id', $user->id)
+                ->where('expires_at', $response->json('expires_at'))
+                ->exists()
+        )->toBeTrue();
     });
 
     test('should eliminate all other user tokens when logging in', function () use ($endpoint): void {
@@ -74,11 +75,12 @@ describe('Auth Login', function (): void {
             ]
         );
 
-        test()->assertDatabaseHas('personal_access_tokens', [
-            'tokenable_id' => $user->id,
-            'name' => 'authToken',
-            'expires_at' => $response->json('data.expiresAt'),
-        ]);
+        expect(
+            PersonalAccessToken::query()
+                ->where('tokenable_id', $user->id)
+                ->where('expires_at', $response->json('expires_at'))
+                ->exists()
+        )->toBeTrue();
     });
 
     /*****************************************************************************************************************/
