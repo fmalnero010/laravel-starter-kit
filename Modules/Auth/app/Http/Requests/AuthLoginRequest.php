@@ -6,7 +6,7 @@ namespace Modules\Auth\Http\Requests;
 
 use App\Contracts\DataTransferableRequest;
 use App\Http\Requests\APIRequest;
-use App\Rules\AlphaNumSpaces;
+use Illuminate\Validation\Rules\Password;
 use Modules\Auth\DataTransferObjects\AuthLoginRequestDto;
 
 class AuthLoginRequest extends APIRequest implements DataTransferableRequest
@@ -19,7 +19,17 @@ class AuthLoginRequest extends APIRequest implements DataTransferableRequest
     {
         return [
             self::EMAIL => ['required', 'email:strict'],
-            self::PASSWORD => ['required', 'string', AlphaNumSpaces::forPassword()],
+            self::PASSWORD => [
+                'required',
+                'string',
+                Password::min(8)
+                    ->max(20)
+                    ->letters()
+                    ->mixedCase()
+                    ->numbers()
+                    ->symbols()
+                    ->uncompromised(),
+            ],
         ];
     }
 

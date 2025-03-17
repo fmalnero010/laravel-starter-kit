@@ -18,7 +18,7 @@ class UserFactory extends Factory
     /**
      * The current password being used by the factory.
      */
-    protected static ?string $password = 'Password1!';
+    public static ?string $password = 'SuperTestPassword1!';
 
     protected $model = User::class;
 
