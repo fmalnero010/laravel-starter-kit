@@ -51,8 +51,7 @@ describe('Auth Login', function (): void {
                 ]
             ]);
 
-        /** @var TestCase $this */
-        $this->assertDatabaseHas('personal_access_tokens', [
+        test()->assertDatabaseHas('personal_access_tokens', [
             'tokenable_id' => $user->id,
             'name' => 'authToken',
             'expires_at' => $response->json('data.expiresAt'),
@@ -75,8 +74,7 @@ describe('Auth Login', function (): void {
             ]
         );
 
-        /** @var TestCase $this */
-        $this->assertDatabaseHas('personal_access_tokens', [
+        test()->assertDatabaseHas('personal_access_tokens', [
             'tokenable_id' => $user->id,
             'name' => 'authToken',
             'expires_at' => $response->json('data.expiresAt'),
