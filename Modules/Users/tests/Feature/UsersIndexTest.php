@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 use Tests\TestCase;
 
 uses(TestCase::class, DatabaseTransactions::class);
+uses()->group('users', 'users-index');
 
 describe('Users Index', function (): void {
     $endpoint = '/api/users';
