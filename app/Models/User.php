@@ -56,11 +56,6 @@ class User extends Authenticatable
         ];
     }
 
-    public function guardName(): string
-    {
-        return 'api';
-    }
-
     /**
      * @return Attribute<Statuses, string>
      */
