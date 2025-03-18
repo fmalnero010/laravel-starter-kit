@@ -6,10 +6,10 @@ namespace Database\Seeders;
 
 use App\Enums\Roles;
 use App\Services\PermissionCollector;
+use BackedEnum;
 use Illuminate\Database\Seeder;
 use Modules\Users\Enums\UserPermissions;
 use Spatie\Permission\Models\Role;
-use UnitEnum;
 
 class PermissionsByRoleSeeder extends Seeder
 {
@@ -48,13 +48,13 @@ class PermissionsByRoleSeeder extends Seeder
     private function getPermissionsForRole(string $roleName): array
     {
         return array_map(
-            fn (UnitEnum $p): string => $p->value,
+            fn (BackedEnum $p): string => $p->value,
             $this->getPermissionsByRole()[$roleName] ?? []
         );
     }
 
     /**
-     * @return array<string, array<int, UnitEnum>>
+     * @return array<string, array<int, BackedEnum>>
      */
     private function getPermissionsByRole(): array
     {

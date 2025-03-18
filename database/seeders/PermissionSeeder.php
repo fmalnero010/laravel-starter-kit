@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace Database\Seeders;
 
 use App\Services\PermissionCollector;
+use BackedEnum;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Permission;
-use UnitEnum;
 
 class PermissionSeeder extends Seeder
 {
@@ -34,7 +34,7 @@ class PermissionSeeder extends Seeder
     private function getPermissionsArray(): array
     {
         return array_map(
-            fn (UnitEnum $permissionEnum): array => [
+            fn (BackedEnum $permissionEnum): array => [
                 'name' => $permissionEnum->value,
                 'guard_name' => 'api',
             ],

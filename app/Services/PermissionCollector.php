@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace App\Services;
 
+use BackedEnum;
 use Modules\Users\Enums\UserPermissions;
-use UnitEnum;
 
 final readonly class PermissionCollector
 {
     /**
-     * @return array<UnitEnum>
+     * @return array<BackedEnum>
      */
     public static function all(): array
     {
@@ -18,7 +18,7 @@ final readonly class PermissionCollector
     }
 
     /**
-     * @return array<array<UnitEnum>>
+     * @return array<array<BackedEnum>>
      */
     private static function getPermissionEnums(): array
     {
