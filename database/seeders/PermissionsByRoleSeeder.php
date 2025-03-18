@@ -4,13 +4,19 @@ declare(strict_types=1);
 
 namespace Database\Seeders;
 
-use App\Enums\Permissions;
 use App\Enums\Roles;
+use App\Services\PermissionCollector;
 use Illuminate\Database\Seeder;
+use Modules\Users\Enums\UserPermissions;
 use Spatie\Permission\Models\Role;
+use UnitEnum;
 
 class PermissionsByRoleSeeder extends Seeder
 {
+    public function __construct(private readonly PermissionCollector $permissionCollector)
+    {
+    }
+
     public function run(): void
     {
         $this->command->info('Assigning permissions to roles...');
@@ -42,21 +48,19 @@ class PermissionsByRoleSeeder extends Seeder
     private function getPermissionsForRole(string $roleName): array
     {
         return array_map(
-            fn (Permissions $p): string => $p->value,
+            fn (UnitEnum $p): string => $p->value,
             $this->getPermissionsByRole()[$roleName] ?? []
         );
     }
 
     /**
-     * @return array<string, array<int, Permissions>>
+     * @return array<string, array<int, UnitEnum>>
      */
     private function getPermissionsByRole(): array
     {
         return [
-            Roles::SuperAdmin->value => Permissions::cases(),
-            Roles::Admin->value => [
-                Permissions::UsersList,
-            ],
+            Roles::SuperAdmin->value => $this->permissionCollector->all(),
+            Roles::Admin->value => UserPermissions::cases(),
             Roles::User->value => [],
         ];
     }

@@ -8,9 +8,11 @@ use App\Contracts\DataTransferableRequest;
 use App\DataTransferObjects\PaginatorDto;
 use App\Http\Requests\APIRequest;
 use App\Rules\AlphaNumSpaces;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Validation\Rules\Enum;
 use Modules\Users\DataTransferObjects\UsersIndexRequestDto;
 use Modules\Users\Enums\Statuses;
+use Modules\Users\Models\User;
 
 class UsersIndexRequest extends APIRequest implements DataTransferableRequest
 {
@@ -25,6 +27,12 @@ class UsersIndexRequest extends APIRequest implements DataTransferableRequest
     private const string PAGE = 'page';
 
     private const string PER_PAGE = 'perPage';
+
+    public function authorize(): bool
+    {
+        Gate::authorize('index', User::class);
+        return true;
+    }
 
     protected function prepareForValidation(): void
     {

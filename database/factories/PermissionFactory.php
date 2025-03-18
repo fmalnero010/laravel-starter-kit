@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Database\Factories;
 
-use App\Enums\Permissions;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Spatie\Permission\Models\Permission;
+use UnitEnum;
 
 class PermissionFactory extends Factory
 {
@@ -19,7 +19,7 @@ class PermissionFactory extends Factory
         ];
     }
 
-    public function withName(Permissions $permission): static
+    public function withName(UnitEnum $permission): static
     {
         return $this->state(fn (array $attributes): array => [
             'name' => $permission->value
