@@ -3,6 +3,8 @@
 use App\Enums\Permissions;
 use App\Enums\Roles;
 use App\Models\User;
+use Database\Factories\PermissionFactory;
+use Database\Factories\RoleFactory;
 use Database\Factories\UserFactory;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Collection;
@@ -17,10 +19,14 @@ uses(TestCase::class, DatabaseTransactions::class);
 uses()->group('users', 'users-index');
 
 beforeEach(function (): void {
+    Permission::query()->delete();
+    Role::query()->delete();
     $user = UserFactory::new()->createOne();
-    $superAdminRole = Role::query()->where('name', Roles::SuperAdmin)->firstOrFail();
+    /** @var Role $superAdminRole */
+    $superAdminRole = RoleFactory::new()->withName(Roles::SuperAdmin)->createOne();
     $user->assignRole($superAdminRole);
-    $userListPermission = Permission::query()->where('name', Permissions::UsersList)->firstOrFail();
+    /** @var Permission $userListPermission */
+    $userListPermission = PermissionFactory::new()->withName(Permissions::UsersList)->createOne();
     $superAdminRole->givePermissionTo($userListPermission);
     /** @var TestCase $this */
     $this->actingAs($user);
