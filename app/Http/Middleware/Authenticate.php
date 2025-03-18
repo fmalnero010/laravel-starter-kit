@@ -10,7 +10,7 @@ class Authenticate extends Middleware
     protected function authenticate($request, array $guards): void
     {
         if (empty($guards)) {
-            $guards = ['sanctum'];
+            $guards = ['api'];
         }
 
         parent::authenticate($request, $guards);
