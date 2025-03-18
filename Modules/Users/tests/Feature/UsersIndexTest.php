@@ -1,16 +1,36 @@
 <?php
 
+use App\Enums\Permissions;
+use App\Enums\Roles;
 use App\Models\User;
+use Database\Factories\PermissionFactory;
+use Database\Factories\RoleFactory;
 use Database\Factories\UserFactory;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Modules\Users\Enums\Statuses;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 use Tests\TestCase;
 
 uses(TestCase::class, DatabaseTransactions::class);
 uses()->group('users', 'users-index');
+
+beforeEach(function (): void {
+    Permission::query()->delete();
+    Role::query()->delete();
+    $user = UserFactory::new()->createOne();
+    /** @var Role $superAdminRole */
+    $superAdminRole = RoleFactory::new()->withName(Roles::SuperAdmin)->createOne();
+    $user->assignRole($superAdminRole);
+    /** @var Permission $userListPermission */
+    $userListPermission = PermissionFactory::new()->withName(Permissions::UsersList)->createOne();
+    $superAdminRole->givePermissionTo($userListPermission);
+    /** @var TestCase $this */
+    $this->actingAs($user);
+});
 
 describe('Users Index', function (): void {
     $endpoint = '/api/users';

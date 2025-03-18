@@ -9,6 +9,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Modules\Users\Enums\Statuses;
+use Spatie\Permission\Traits\HasPermissions;
 use Spatie\Permission\Traits\HasRoles;
 
 /**
@@ -27,6 +28,7 @@ class User extends Authenticatable
 {
     use HasApiTokens;
     use HasRoles;
+    use HasPermissions;
     use Notifiable;
     use SoftDeletes;
 

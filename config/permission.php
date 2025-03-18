@@ -71,6 +71,8 @@ return [
         'role_has_permissions' => 'role_has_permissions',
     ],
 
+    'default_guard' => 'sanctum',
+
     'column_names' => [
         /*
          * Change this if you want to name the related pivots other than defaults
@@ -197,6 +199,6 @@ return [
          * file. Using 'default' here means to use the `default` set in cache.php.
          */
 
-        'store' => 'default',
+        'store' => 'array',
     ],
 ];
