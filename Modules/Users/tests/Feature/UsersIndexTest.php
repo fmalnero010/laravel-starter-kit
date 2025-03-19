@@ -1,6 +1,5 @@
 <?php
 
-use App\Enums\Permissions;
 use App\Enums\Roles;
 use App\Models\User;
 use Database\Factories\PermissionFactory;
@@ -8,8 +7,10 @@ use Database\Factories\RoleFactory;
 use Database\Factories\UserFactory;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Modules\Users\Enums\Statuses;
+use Modules\Users\Enums\UserPermissions;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
@@ -26,7 +27,7 @@ beforeEach(function (): void {
     $superAdminRole = RoleFactory::new()->withName(Roles::SuperAdmin)->createOne();
     $user->assignRole($superAdminRole);
     /** @var Permission $userListPermission */
-    $userListPermission = PermissionFactory::new()->withName(Permissions::UsersList)->createOne();
+    $userListPermission = PermissionFactory::new()->withName(UserPermissions::UsersIndex)->createOne();
     $superAdminRole->givePermissionTo($userListPermission);
     /** @var TestCase $this */
     $this->actingAs($user);
@@ -172,6 +173,34 @@ describe('Users Index', function (): void {
     /*****************************************************************************************************************/
     /*                                                  Fail Tests                                                   */
     /*****************************************************************************************************************/
+
+    test('should fail with 401 if not authenticated', function () use ($endpoint): void {
+        Auth::logout();
+
+        /** @var TestCase $this */
+        $this->get($endpoint)
+            ->assertStatus(ResponseAlias::HTTP_UNAUTHORIZED)
+            ->assertJson([
+                'status' => -1,
+                'message' => 'ERROR',
+                'error' => 'You are not authenticated.'
+            ]);
+    });
+
+    test('should fail with 403 if do not have the right permissions', function () use ($endpoint): void {
+        $newUser = UserFactory::new()->createOne();
+
+        /** @var TestCase $this */
+        $this->actingAs($newUser);
+
+        $this->get($endpoint)
+            ->assertStatus(ResponseAlias::HTTP_FORBIDDEN)
+            ->assertJson([
+                'status' => -1,
+                'message' => 'ERROR',
+                'error' => 'This action is unauthorized.'
+            ]);
+    });
 
     test('should fail with 422 if invalid first name is send', function () use ($endpoint): void {
         /** @var TestCase $this */

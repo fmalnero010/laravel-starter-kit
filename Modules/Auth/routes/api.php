@@ -9,5 +9,5 @@ Route::prefix('auth')
     ->group(static function (): void {
         Route::post('login', AuthLoginController::class)->name('login');
         Route::post('logout', AuthLogoutController::class)->name('logout')
-            ->middleware(['auth.sanctum']);
+            ->middleware('auth:api');
     });

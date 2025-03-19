@@ -25,7 +25,7 @@ use OpenApi\Annotations as OA;
  *     @OA\Property(
  *         property="error",
  *         type="string",
- *         example="You are not logged in."
+ *         example="You are not authenticated."
  *     )
  * )
  */

@@ -7,15 +7,6 @@ use Illuminate\Auth\Middleware\Authenticate as Middleware;
 
 class Authenticate extends Middleware
 {
-    protected function authenticate($request, array $guards): void
-    {
-        if (empty($guards)) {
-            $guards = ['sanctum'];
-        }
-
-        parent::authenticate($request, $guards);
-    }
-
     /**
      * @throws AuthenticationException
      */

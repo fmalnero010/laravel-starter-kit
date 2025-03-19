@@ -4,12 +4,17 @@ declare(strict_types=1);
 
 namespace Database\Seeders;
 
-use App\Enums\Permissions;
+use App\Services\PermissionCollector;
+use BackedEnum;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Permission;
 
 class PermissionSeeder extends Seeder
 {
+    public function __construct(private readonly PermissionCollector $permissionCollector)
+    {
+    }
+
     public function run(): void
     {
         $this->command->info('Seeding permissions...');
@@ -29,11 +34,11 @@ class PermissionSeeder extends Seeder
     private function getPermissionsArray(): array
     {
         return array_map(
-            fn (Permissions $permission): array => [
-                'name' => $permission->value,
+            fn (BackedEnum $permissionEnum): array => [
+                'name' => $permissionEnum->value,
                 'guard_name' => 'api',
             ],
-            Permissions::cases()
+            $this->permissionCollector->all()
         );
     }
 }

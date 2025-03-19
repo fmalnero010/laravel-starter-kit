@@ -46,7 +46,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Paginated list of users",
+                        "description": "Success",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -85,22 +85,47 @@
                             }
                         }
                     },
-                    "401": {
-                        "description": "Unauthenticated",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/unauthenticated"
-                                }
-                            }
-                        }
-                    },
                     "422": {
                         "description": "Validation Error",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/validation-error"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/server-error"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/auth/logout": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Logout",
+                "description": "Logs a user out",
+                "operationId": "auth-logout",
+                "responses": {
+                    "204": {
+                        "description": "No Content"
+                    },
+                    "401": {
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/unauthenticated"
                                 }
                             }
                         }
@@ -386,7 +411,7 @@
                     },
                     "error": {
                         "type": "string",
-                        "example": "You are not logged in."
+                        "example": "You are not authenticated."
                     }
                 },
                 "type": "object"
@@ -443,6 +468,14 @@
                 },
                 "type": "object"
             }
+        },
+        "securitySchemes": {
+            "sanctum": {
+                "type": "apiKey",
+                "description": "Enter token in format (Bearer <token>)",
+                "name": "Authorization",
+                "in": "header"
+            }
         }
     },
     "tags": [
@@ -453,6 +486,11 @@
         {
             "name": "Users",
             "description": "Users"
+        }
+    ],
+    "security": [
+        {
+            "sanctum": []
         }
     ]
 }

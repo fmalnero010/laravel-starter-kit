@@ -32,7 +32,7 @@ use OpenApi\Annotations as OA;
  *
  *      @OA\Response(
  *          response=200,
- *          description="Paginated list of users",
+ *          description="Success",
  *
  *          @OA\JsonContent(
  *
@@ -62,13 +62,6 @@ use OpenApi\Annotations as OA;
  *                  )
  *              )
  *          )
- *      ),
- *
- *      @OA\Response(
- *          response=401,
- *          description="Unauthenticated",
- *
- *          @OA\JsonContent(ref="#/components/schemas/unauthenticated")
  *      ),
  *
  *      @OA\Response(
