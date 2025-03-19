@@ -1,0 +1,35 @@
+{
+    "commit-msg": {
+        "enabled": true,
+        "actions": [
+            {
+                "action": "\\Ramsey\\CaptainHook\\ValidateConventionalCommit"
+            }
+        ]
+    },
+    "pre-commit": {
+        "enabled": true,
+        "actions": [
+            {
+                "action": "echo 'Cannot push to main nor develop branch directly. Please use another branch.'; exit 1",
+                "options": {},
+                "conditions": [
+                    {
+                        "exec": "\\CaptainHook\\App\\Hook\\Condition\\OnBranch",
+                        "args": ["main", "develop"]
+                    }
+                ]
+            },
+            { "action": "vendor/bin/ecs --fix ", "options": [] }
+        ]
+    },
+    "pre-push": {
+        "enabled": true,
+        "actions": [
+            { "action": "\\CaptainHook\\App\\Hook\\Composer\\Action\\CheckLockFile", "options": [] },
+            { "action": "vendor/bin/phpstan --memory-limit=2g", "options": [] },
+            { "action": "vendor/bin/ecs --fix", "options": [] },
+            { "action": "vendor/bin/sail artisan test"}
+        ]
+    }
+}
